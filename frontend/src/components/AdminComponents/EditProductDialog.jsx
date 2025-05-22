@@ -62,7 +62,7 @@ const EditProductDialog = ({ open, onClose, product, onUpdate }) => {
     try {
       // make API call
       const response = await axios.put(
-        `https://www.fit-nest.in/api/products/UpdateProduct/${product._id}`,
+        `http://13.211.182.131:5000/api/products/UpdateProduct/${product._id}`,
         formData, { withCredentials: true }
       );
       // if success update the product

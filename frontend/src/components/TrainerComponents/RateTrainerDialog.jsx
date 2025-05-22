@@ -156,7 +156,7 @@ const RateTrainerDialog = () => {
  */
     const fetchTrainers = async () => {
       try {
-        const response = await axios.get("https://www.fit-nest.in/api/Trainer/AllTrainers", { withCredentials: true });
+        const response = await axios.get("http://13.211.182.131:5000/api/Trainer/AllTrainers", { withCredentials: true });
         setTrainers(response.data);
       } catch (error) {
         toast.error("Unable to fetch trainer information.");
@@ -186,7 +186,7 @@ const RateTrainerDialog = () => {
       }
 
       await axios.put(
-        `https://www.fit-nest.in/api/Trainer/rate/${selectedTrainer}/${Authuser._id}`,
+        `http://13.211.182.131:5000/api/Trainer/rate/${selectedTrainer}/${Authuser._id}`,
         { rating },
         { withCredentials: true }
       );

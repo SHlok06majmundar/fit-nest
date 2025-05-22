@@ -30,7 +30,7 @@ const Footer = () => {
    */
   const fetchCompanyInfo = async () => {
     try {
-      const response = await axios.get(`https://www.fit-nest.in/api/Admin/get-footer-info`, { withCredentials: true });
+      const response = await axios.get(`http://13.211.182.131:5000/api/Admin/get-footer-info`, { withCredentials: true });
       setCompanyInfo(response.data[0]);
     } catch (err) {
       console.error("Error fetching company info:", err);

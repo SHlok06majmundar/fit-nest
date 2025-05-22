@@ -22,7 +22,7 @@ const TrainerShiftUpdate = ({ trainer, setEditShift, setTrainers }) => {
 
     // Make API call to update the shift (use your actual API endpoint here)
     try {
-      const response = await fetch(`https://www.fit-nest.in/api/Trainer/update-shift/${trainer._id}`, {
+      const response = await fetch(`http://13.211.182.131:5000/api/Trainer/update-shift/${trainer._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

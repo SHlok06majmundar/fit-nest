@@ -22,7 +22,7 @@ const useLogout = () => {
     const logout = async () => {
         setloading(true)
         try {
-            const res = await fetch('https://www.fit-nest.in/api/auth/logout', {
+            const res = await fetch('http://13.211.182.131:5000/api/auth/logout', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

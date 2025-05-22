@@ -25,7 +25,7 @@ const AdminFeedbackView = () => {
 
   const fetchFeedbacks = async () => {
     try {
-      const response = await axios.get("https://www.fit-nest.in/api/users/all-feedbacks", { withCredentials: true });
+      const response = await axios.get("http://13.211.182.131:5000/api/users/all-feedbacks", { withCredentials: true });
       if (response.status === 200) {
         setFeedbacks(response.data.data);
       }

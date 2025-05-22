@@ -31,10 +31,10 @@ export const ChangeRequestApproval = () => {
    */
   const fetchRequests = async () => {
     try {
-      const response = await axios.get("https://www.fit-nest.in/api/users/getChangeRequests", { withCredentials: true }); // Replace with your API endpoint
+      const response = await axios.get("http://13.211.182.131:5000/api/users/getChangeRequests", { withCredentials: true }); // Replace with your API endpoint
       const fetchedRequests = await Promise.all(
         response.data.map(async (request) => {
-          const currentInfoResponse = await axios.get(`https://www.fit-nest.in/api/users/${request.userId}/current-info`, { withCredentials: true });
+          const currentInfoResponse = await axios.get(`http://13.211.182.131:5000/api/users/${request.userId}/current-info`, { withCredentials: true });
           return {
             ...request,
             currentInformation: currentInfoResponse.data,
@@ -69,7 +69,7 @@ export const ChangeRequestApproval = () => {
    */
   const handleAction = async (requestId, userId, action) => {
     try {
-      const response = await axios.patch(`https://www.fit-nest.in/api/admin/change-requests/${requestId}`, {
+      const response = await axios.patch(`http://13.211.182.131:5000/api/admin/change-requests/${requestId}`, {
         status: action,
         reviewedBy: Authuser._id,
         userId: userId.toString()

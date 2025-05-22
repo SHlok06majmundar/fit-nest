@@ -45,7 +45,7 @@ const ChangePassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`https://www.fit-nest.in/api/auth/changepasswordbyoldpassword/${Authuser._id}`, {
+      const response = await axios.post(`http://13.211.182.131:5000/api/auth/changepasswordbyoldpassword/${Authuser._id}`, {
         currentPassword,
         newPassword,
       }, { withCredentials: true });
@@ -76,7 +76,7 @@ const ChangePassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`https://www.fit-nest.in/api/auth/changepasswordbyotp/${Authuser._id}`, {
+      const response = await axios.post(`http://13.211.182.131:5000/api/auth/changepasswordbyotp/${Authuser._id}`, {
         email,
         otp,
         newPassword,
@@ -106,7 +106,7 @@ const ChangePassword = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post(`https://www.fit-nest.in/api/auth/send-otp`, { email }, { withCredentials: true });
+      const response = await axios.post(`http://13.211.182.131:5000/api/auth/send-otp`, { email }, { withCredentials: true });
       if (response.status === 200) {
         toast.success('OTP sent to your email!');
       } else {

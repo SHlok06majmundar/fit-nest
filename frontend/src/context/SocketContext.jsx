@@ -35,7 +35,7 @@ export const SocketContext = createContext();
  */
 export const SocketProvider = ({ children }) => {
   const {Authuser}=useAuthContext();
-  const socket = io('https://www.fit-nest.in/',{
+  const socket = io('http://13.211.182.131:5000/',{
     query:{Authuser:Authuser?._id || null},
  
   });

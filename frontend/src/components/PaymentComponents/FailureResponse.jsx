@@ -44,7 +44,7 @@ const FailureResponse = () => {
 
       try {
         const response = await axios.post(
-          `https://www.fit-nest.in/api/Payment/check-status-orders-not-logged-in/`,
+          `http://13.211.182.131:5000/api/Payment/check-status-orders-not-logged-in/`,
           { paymentId: PaymentId },
           { withCredentials: true }
         );
@@ -64,7 +64,7 @@ const FailureResponse = () => {
 
       try {
         const response = await axios.post(
-          `https://www.fit-nest.in/api/Payment/check-status-orders/`,
+          `http://13.211.182.131:5000/api/Payment/check-status-orders/`,
           { paymentId: PaymentId },
           { withCredentials: true }
         );
@@ -99,7 +99,7 @@ const FailureResponse = () => {
 
     try {
       const response = await axios.post(
-        `https://www.fit-nest.in/api/Payment/request-refund/`,
+        `http://13.211.182.131:5000/api/Payment/request-refund/`,
         { paymentId: PaymentId, amount: amount },
         { withCredentials: true }
       );

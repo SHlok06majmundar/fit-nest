@@ -37,7 +37,7 @@ const useLogin = () => {
   
     setLoading(true);
     try {
-      const res = await fetch('https://www.fit-nest.in/api/auth/login', {
+      const res = await fetch('http://13.211.182.131:5000/api/auth/login', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }) // Sending email and password
@@ -70,7 +70,7 @@ const useLogin = () => {
   
     setLoading(true);
     try {
-      const res = await fetch('https://www.fit-nest.in/api/auth/login-admin', {
+      const res = await fetch('http://13.211.182.131:5000/api/auth/login-admin', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }) ,// Sending email and password,

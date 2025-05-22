@@ -53,7 +53,7 @@ const AddMembershipPlanDialog = ({ fetchPlans, open, onClose }) => {
       try {
         // Call backend to add the membership plan
         const response = await axios.post(
-          "https://www.fit-nest.in/api/Admin/add-membership-plans",
+          "http://13.211.182.131:5000/api/Admin/add-membership-plans",
           formData, { withCredentials: true }
         );
         if (response.status === 200) {

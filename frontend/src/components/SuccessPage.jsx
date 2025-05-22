@@ -35,7 +35,7 @@ const SuccessPage = () => {
     const fetchOrderDetails = async () => {
       if (!Authuser) {
         try {
-          const response = await axios.get(`https://www.fit-nest.in/api/Order/order-details-guest/${orderId}`);
+          const response = await axios.get(`http://13.211.182.131:5000/api/Order/order-details-guest/${orderId}`);
           setOrderDetails(response.data);
         }
         catch (err) {
@@ -48,7 +48,7 @@ const SuccessPage = () => {
       }
       try {
         const response = await axios.post(
-          `https://www.fit-nest.in/api/Order/order-details/${orderId}/${AuthUserId}`, {}, { withCredentials: true }
+          `http://13.211.182.131:5000/api/Order/order-details/${orderId}/${AuthUserId}`, {}, { withCredentials: true }
         );
         setOrderDetails(response.data);
       } catch (error) {

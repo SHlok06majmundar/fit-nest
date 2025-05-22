@@ -47,7 +47,7 @@ const Resources = () => {
   const handleDeleteResourceById = async (resourceId) => {
     if (window.confirm('Are you sure you want to delete this resource?')) {
       try {
-        const response = await axios.delete(`https://www.fit-nest.in/api/Admin/DeleteResource/${resourceId}`, { withCredentials: true });
+        const response = await axios.delete(`http://13.211.182.131:5000/api/Admin/DeleteResource/${resourceId}`, { withCredentials: true });
         if (response.status === 200) {
           setResources((prevResources) => prevResources.filter((resource) => resource._id !== resourceId));
           const existingResources = JSON.parse(localStorage.getItem('gym-resources')) || [];
@@ -77,7 +77,7 @@ const Resources = () => {
     if (window.confirm('Are you sure you want to edit this resource?')) {
       try {
         const response = await axios.put(
-          `https://www.fit-nest.in/api/Admin/UpdateResource/${resourceId}`,
+          `http://13.211.182.131:5000/api/Admin/UpdateResource/${resourceId}`,
           { resourceLink: newResourceLink }, { withCredentials: true }
         );
 
@@ -105,7 +105,7 @@ const Resources = () => {
    */
   const fetchResources = async () => {
     try {
-      const response = await axios.get('https://www.fit-nest.in/api/Admin/AllResources');
+      const response = await axios.get('http://13.211.182.131:5000/api/Admin/AllResources');
       setResources(response.data);
     } catch (err) {
       console.log(err);
@@ -114,7 +114,7 @@ const Resources = () => {
 
   const fetchPlans = async () => {
     try {
-      const response = await axios.get('https://www.fit-nest.in/api/Admin/AllMembershipPlans', { withCredentials: true });
+      const response = await axios.get('http://13.211.182.131:5000/api/Admin/AllMembershipPlans', { withCredentials: true });
       setPlans(response.data);
     } catch (err) {
       console.log(err);

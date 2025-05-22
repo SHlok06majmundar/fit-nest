@@ -7,7 +7,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: "https://www.fit-nest.in/",
+        target: "http://13.211.182.131:5000/",
         changeOrigin: true, // recommended
         secure: false       // optional, only if HTTPS issues
       }

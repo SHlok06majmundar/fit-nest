@@ -38,7 +38,7 @@ console.log(type, price)
     try {
       // Step 1: Create Razorpay order
       const orderResponse = await axios.post(
-        'https://www.fit-nest.in/api/Payment/create-order-for-membership',
+        'http://13.211.182.131:5000/api/Payment/create-order-for-membership',
         {
           type: type,
           amount: price,
@@ -60,7 +60,7 @@ console.log(type, price)
           // On payment success, verify the payment
           try {
             const verifyResponse = await axios.post(
-              'https://www.fit-nest.in/api/Payment/verify-payment-for-membership',
+              'http://13.211.182.131:5000/api/Payment/verify-payment-for-membership',
               {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,

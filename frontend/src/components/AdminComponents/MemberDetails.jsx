@@ -36,7 +36,7 @@ const MemberDetails = ({ MemeberShipData, fetchMembershipDetails, setMemeberShip
   const DeleteMemberById = async (userId) => {
     if (window.confirm("Are you sure you want to delete this member?")) {
       try {
-        const response = await axios.delete(`https://www.fit-nest.in/api/Admin/Delete-Member/${userId}`, { withCredentials: true });
+        const response = await axios.delete(`http://13.211.182.131:5000/api/Admin/Delete-Member/${userId}`, { withCredentials: true });
         if (response.status === 200) {
           setMemeberShipData((prevMembers) => prevMembers.filter((member) => member._id !== userId));
         }

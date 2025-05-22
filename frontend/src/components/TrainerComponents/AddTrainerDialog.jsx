@@ -53,7 +53,7 @@ const AddTrainerDialog = ({ fetchTrainers, openDialog, setOpenDialog }) => {
           // Collect promises for each trainer addition
           addTrainerPromises.push(
             axios.post(
-              'https://www.fit-nest.in/api/Trainer/AddTrainer',
+              'http://13.211.182.131:5000/api/Trainer/AddTrainer',
               { trainer_name, trainer_contact, email, salary, profile_picture },
               { withCredentials: true }
             )
@@ -109,7 +109,7 @@ const AddTrainerDialog = ({ fetchTrainers, openDialog, setOpenDialog }) => {
   const handleAddTrainersManual = async () => {
     if (window.confirm('Are you sure you want to add this trainer?')) {
       try {
-        const response = await axios.post('https://www.fit-nest.in/api/Trainer/AddTrainer', TrainerData, { withCredentials: true });
+        const response = await axios.post('http://13.211.182.131:5000/api/Trainer/AddTrainer', TrainerData, { withCredentials: true });
         if (response.data) {
           fetchTrainers();
         }

@@ -126,7 +126,7 @@ const TrainersAssignedToUsers = ({ userId }) => {
 
   const fetchAvailaibleTrainers = async () => {
     try {
-      const response = await axios.get("https://www.fit-nest.in/api/Trainer/AllTrainers", { withCredentials: true });
+      const response = await axios.get("http://13.211.182.131:5000/api/Trainer/AllTrainers", { withCredentials: true });
       setAvailaibleTrainers(response.data);
     } catch (error) {
       console.error("Error fetching trainers:", error);
@@ -140,7 +140,7 @@ const TrainersAssignedToUsers = ({ userId }) => {
   useEffect(() => {
     if (userId) {
       axios
-        .get(`https://www.fit-nest.in/api/Trainer/trainers-assigned-to-user/${userId}`, { withCredentials: true })
+        .get(`http://13.211.182.131:5000/api/Trainer/trainers-assigned-to-user/${userId}`, { withCredentials: true })
         .then((response) => {
           setTrainers(response.data);
         })
@@ -152,7 +152,7 @@ const TrainersAssignedToUsers = ({ userId }) => {
 
   const handleRequestForTrainer = async (trainerId) => {
     try {
-      const response = await axios.put("https://www.fit-nest.in/api/Trainer/request-trainer", {
+      const response = await axios.put("http://13.211.182.131:5000/api/Trainer/request-trainer", {
         trainerId,
         memberId: Authuser._id,
         memberName: `${Authuser.first_name} ${Authuser.last_name}`,
