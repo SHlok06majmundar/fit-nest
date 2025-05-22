@@ -45,6 +45,7 @@ const OrdersDialog = ({ open, onClose, userId }) => {
             prevOrders.filter((order) => order.orderId !== orderId)
           );
           alert('Order cancelled successfully!');
+          
         }
       }
       catch (error) {
