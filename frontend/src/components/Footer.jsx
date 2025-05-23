@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API } from '../config';
 
 /**
  * Footer component for the website.
@@ -14,31 +15,33 @@ import axios from 'axios';
  */
 const Footer = () => {
   const [email, setEmail] = useState("");
-  const [companyInfo, setCompanyInfo] = useState({
-    companyAddress: "",
-    companyEmail: "",
-    companyMobile: "",
-    twitterLink: "",
-    instagramLink: "",
-    linkedinLink: "",
-    facebookLink: "",
+  const [footerInfo, setFooterInfo] = useState({
+    companyName: '',
+    address: '',
+    phone: '',
+    email: '',
+    socialMedia: {
+      facebook: '',
+      instagram: '',
+      twitter: '',
+    },
   });
 
   /**
    * Fetches the company information from the server and updates the component state
    * with the latest information.
    */
-  const fetchCompanyInfo = async () => {
+  const fetchFooterInfo = async () => {
     try {
-      const response = await axios.get(`http://13.211.182.131:5000/api/Admin/get-footer-info`, { withCredentials: true });
-      setCompanyInfo(response.data[0]);
-    } catch (err) {
-      console.error("Error fetching company info:", err);
+      const response = await axios.get(API.ADMIN.GET_FOOTER_INFO);
+      setFooterInfo(response.data);
+    } catch (error) {
+      console.error('Error fetching footer info:', error);
     }
   };
 
   useEffect(() => {
-    fetchCompanyInfo();
+    fetchFooterInfo();
   }, []);
 
   /**
@@ -112,29 +115,29 @@ const Footer = () => {
               <li className="flex items-center gap-3">
                 <i className="fas fa-envelope text-green-400 text-lg"></i>
                 <a
-                  href={`mailto:${companyInfo?.companyEmail || ""}`}
+                  href={`mailto:${footerInfo?.email || ""}`}
                   className="hover:text-green-400 transition duration-300 ease-in-out"
                 >
-                  {companyInfo.companyEmail}
+                  {footerInfo.email}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <i className="fas fa-phone-alt text-green-400 text-lg"></i>
                 <a
-                  href={`tel:${companyInfo?.companyMobile || ""}`}
+                  href={`tel:${footerInfo?.phone || ""}`}
                   className="hover:text-green-400 transition duration-300 ease-in-out"
                 >
-                  {companyInfo.companyMobile}
+                  {footerInfo.phone}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <i className="fas fa-map-marker-alt text-green-400 text-lg"></i>
-                <p>{companyInfo?.companyAddress || ""}</p>
+                <p>{footerInfo?.address || ""}</p>
               </li>
             </ul>
             <div className="mt-6 flex justify-center gap-6">
               <a
-                href={`${companyInfo?.facebookLink || ""}`}
+                href={`${footerInfo?.socialMedia?.facebook || ""}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xl hover:text-green-400 transition duration-300 ease-in-out"
@@ -142,7 +145,7 @@ const Footer = () => {
                 <i className="fab fa-facebook-f"></i>
               </a>
               <a
-                href={`${companyInfo?.instagramLink || ""}`}
+                href={`${footerInfo?.socialMedia?.instagram || ""}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xl hover:text-green-400 transition duration-300 ease-in-out"
@@ -150,13 +153,13 @@ const Footer = () => {
                 <i className="fab fa-instagram"></i>
               </a>
               <a
-                href={`${companyInfo?.twitterLink || ""}`}
+                href={`${footerInfo?.socialMedia?.twitter || ""}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xl hover:text-green-400 transition duration-300 ease-in-out"
               >
-<i className="fab fa-x-twitter"></i>
-</a>
+                <i className="fab fa-x-twitter"></i>
+              </a>
             </div>
           </div>
 

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useAuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { API } from '../config';
 /**
  * useLogout hook
  * 
@@ -17,12 +18,13 @@ import { useNavigate } from "react-router-dom";
  */
 const useLogout = () => {
     const [loading, setloading] = useState(false);
-    const {  setAuthuser } = useAuthContext();
+    const { setAuthuser } = useAuthContext();
     const navigate = useNavigate();
+    
     const logout = async () => {
         setloading(true)
         try {
-            const res = await fetch('http://13.211.182.131:5000/api/auth/logout', {
+            const res = await fetch(API.AUTH.LOGOUT, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -31,7 +33,7 @@ const useLogout = () => {
             if (data.error) {
                 throw new Error(data.error);
             }
-            toast.success("Logout successful!",{duration:3000});
+            toast.success("Logout successful!", {duration:3000});
             localStorage.removeItem('gym-user');
             setAuthuser(null);
             navigate('/login');
@@ -44,4 +46,5 @@ const useLogout = () => {
     }
     return { loading, logout };
 }
-export default useLogout
+
+export default useLogout;

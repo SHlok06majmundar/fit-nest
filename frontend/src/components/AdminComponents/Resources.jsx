@@ -10,6 +10,7 @@ import ManageCompanyInfo from './ManageCompanyInfo';
 import ManageHomeMedia from './ManageHomeMedia';
 import AddMembershipPlanDialog from './AddMembershipPlanDialog';
 import ManageEvents from './ManageEvents';
+import { API } from '../../config';
 
 /**
  * The Resources component renders a page that allows an admin to manage and edit
@@ -77,8 +78,9 @@ const Resources = () => {
     if (window.confirm('Are you sure you want to edit this resource?')) {
       try {
         const response = await axios.put(
-          `http://13.211.182.131:5000/api/Admin/UpdateResource/${resourceId}`,
-          { resourceLink: newResourceLink }, { withCredentials: true }
+          `${API.ADMIN.UPDATE_RESOURCE}/${resourceId}`,
+          { resourceLink: newResourceLink },
+          { withCredentials: true }
         );
 
         setResources((prevResources) =>
@@ -90,8 +92,8 @@ const Resources = () => {
           resource._id === resourceId ? response.data : resource
         );
         localStorage.setItem('gym-resources', JSON.stringify(updatedResources));
-        setEditLinkId(null); // Reset edit state after successful update
-        setNewResourceLink(''); // Clear the input field
+        setEditLinkId(null);
+        setNewResourceLink('');
       } catch (err) {
         console.log(err);
       }
@@ -105,7 +107,7 @@ const Resources = () => {
    */
   const fetchResources = async () => {
     try {
-      const response = await axios.get('http://13.211.182.131:5000/api/Admin/AllResources');
+      const response = await axios.get(API.ADMIN.ALL_RESOURCES);
       setResources(response.data);
     } catch (err) {
       console.log(err);

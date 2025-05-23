@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { SocketContext } from "../../context/SocketContext";
 import { useAuthContext } from "../../context/AuthContext";
+import { API } from '../../config';
 
 /**
  * A component that displays a list of change requests for user profile information.
@@ -31,10 +32,10 @@ export const ChangeRequestApproval = () => {
    */
   const fetchRequests = async () => {
     try {
-      const response = await axios.get("http://13.211.182.131:5000/api/users/getChangeRequests", { withCredentials: true }); // Replace with your API endpoint
+      const response = await axios.get(API.ADMIN.GET_CHANGE_REQUESTS, { withCredentials: true });
       const fetchedRequests = await Promise.all(
         response.data.map(async (request) => {
-          const currentInfoResponse = await axios.get(`http://13.211.182.131:5000/api/users/${request.userId}/current-info`, { withCredentials: true });
+          const currentInfoResponse = await axios.get(`${API.ADMIN.GET_USER_CURRENT_INFO}/${request.userId}`, { withCredentials: true });
           return {
             ...request,
             currentInformation: currentInfoResponse.data,

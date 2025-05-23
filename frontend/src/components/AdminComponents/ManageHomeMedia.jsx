@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API } from '../../config';
 
 /**
  * Component to manage home media including HOME_LOGO, HOME_PAGE_VIDEO, and custom media.
@@ -32,7 +33,7 @@ const ManageHomeMedia = () => {
      */
     const fetchMedia = async () => {
       try {
-        const response = await axios.get("http://13.211.182.131:5000/api/Admin/home-media", {
+        const response = await axios.get(API.ADMIN.HOME_MEDIA, {
           withCredentials: true,
         });
         const { homeLogo, homePageVideo, customMedia } = response.data;
@@ -64,7 +65,7 @@ const ManageHomeMedia = () => {
   // Save changes for HOME_LOGO and HOME_PAGE_VIDEO
   const handleSaveHomeMedia = async () => {
     try {
-      const response = await axios.put("http://13.211.182.131:5000/api/Admin/put-home-media", {
+      const response = await axios.put(API.ADMIN.PUT_HOME_MEDIA, {
         homeLogo,
         homePageVideo,
       }, {
@@ -84,7 +85,7 @@ const ManageHomeMedia = () => {
       return;
     }
     try {
-      const response = await axios.post("http://13.211.182.131:5000/api/Admin/custom-media", newMedia, {
+      const response = await axios.post(API.ADMIN.CUSTOM_MEDIA, newMedia, {
         withCredentials: true,
       });
       setCustomMedia([...customMedia, newMedia]);

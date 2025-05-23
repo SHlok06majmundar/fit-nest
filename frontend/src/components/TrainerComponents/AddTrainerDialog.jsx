@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';  // Import xlsx library for Excel parsing
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { API } from '../../config';
 /**
  * A dialog to add new trainers to the database. The dialog contains a text field to upload an Excel file and a form to add trainers manually.
  * The form to add trainers manually includes fields for the trainer's name, contact details, email and salary.
@@ -15,7 +16,7 @@ import toast from 'react-hot-toast';
  * The dialog is centered in the middle of the screen.
  * The dialog is opened in a new window.
  */
-const AddTrainerDialog = ({ fetchTrainers, openDialog, setOpenDialog }) => {
+const AddTrainerDialog = ({ fetchTrainers, openDialog, setOpenDialog, onSuccess }) => {
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [selectedTime, setSelectedTime] = useState('9 AM - 9 PM');
   const [filename, setfilename] = useState('');
@@ -53,7 +54,7 @@ const AddTrainerDialog = ({ fetchTrainers, openDialog, setOpenDialog }) => {
           // Collect promises for each trainer addition
           addTrainerPromises.push(
             axios.post(
-              'http://13.211.182.131:5000/api/Trainer/AddTrainer',
+              API.TRAINER.ADD_TRAINER,
               { trainer_name, trainer_contact, email, salary, profile_picture },
               { withCredentials: true }
             )
@@ -109,9 +110,10 @@ const AddTrainerDialog = ({ fetchTrainers, openDialog, setOpenDialog }) => {
   const handleAddTrainersManual = async () => {
     if (window.confirm('Are you sure you want to add this trainer?')) {
       try {
-        const response = await axios.post('http://13.211.182.131:5000/api/Trainer/AddTrainer', TrainerData, { withCredentials: true });
-        if (response.data) {
+        const response = await axios.post(API.TRAINER.ADD_TRAINER, TrainerData, { withCredentials: true });
+        if (response.status === 200) {
           fetchTrainers();
+          onSuccess();
         }
 
         setOpenDialog(false); // Close the dialog after adding the product

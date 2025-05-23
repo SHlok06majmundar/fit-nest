@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API } from '../../config';
 
 /**
  * Component to manage locations for the "ABOUT US" section.
@@ -31,7 +32,7 @@ const ManageLocations = () => {
      */
     const fetchLocations = async () => {
       try {
-        const response = await axios.get('http://13.211.182.131:5000/api/Admin/about-us', { withCredentials: true }); // Update with your backend route
+        const response = await axios.get(API.ADMIN.ABOUT_US, { withCredentials: true });
         setLocations(response.data || []);
       } catch (error) {
         console.error('Error fetching locations:', error);
@@ -89,7 +90,7 @@ const ManageLocations = () => {
    */
   const saveLocations = async () => {
     try {
-      await axios.post('http://13.211.182.131:5000/api/Admin/save-locations', { locations }, { withCredentials: true });
+      await axios.post(API.ADMIN.SAVE_LOCATIONS, { locations }, { withCredentials: true });
       alert('Images updated successfully for about us!');
     } catch (error) {
       console.error('Error saving locations:', error);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { API } from '../config';
 
 
 /**
@@ -10,9 +11,10 @@ import toast from "react-hot-toast";
  *
  * @returns {JSX.Element} The rendered dialog component.
  */
-const FeedbackDialog = ({ userId }) => {
-  const [feedbackMessage, setFeedbackMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const FeedbackDialog = ({ isOpen, onClose, orderId }) => {
+  const [feedback, setFeedback] = useState("");
+  const [rating, setRating] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   /**
    * Submits the user feedback to the server.
@@ -23,30 +25,21 @@ const FeedbackDialog = ({ userId }) => {
    * If the server responds with an error, it logs the error and alerts the user with an error message.
    * Finally, it sets the isSubmitting state to false to stop the loading indicator.
    */
-  const handleSubmitFeedback = async () => {
-    if (!feedbackMessage) {
-      toast.error("Please enter a feedback message!");
-      return;
-    }
-
-    setIsSubmitting(true);
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
     try {
-      const response = await axios.post("http://13.211.182.131:5000/api/users/submit-feedback", {
-        userId,
-        message: feedbackMessage,
+      await axios.post(API.ORDER.SUBMIT_FEEDBACK, {
+        orderId,
+        feedback,
+        rating,
       }, { withCredentials: true });
-
-      if (response.status === 200) {
-        toast.success("Feedback submitted successfully!");
-        setFeedbackMessage(""); 
-      }
+      onClose();
     } catch (error) {
-      console.error("Error submitting feedback:", error);
-      toast.error("Error submitting feedback. Please try again.");
+      console.error('Error submitting feedback:', error);
+    } finally {
+      setLoading(false);
     }
-
-    setIsSubmitting(false);
   };
 
   const isSmallScreen = window.innerWidth <= 768;
@@ -109,8 +102,8 @@ const FeedbackDialog = ({ userId }) => {
     <textarea
       style={styles.textarea}
       placeholder="Write your feedback here..."
-      value={feedbackMessage}
-      onChange={(e) => setFeedbackMessage(e.target.value)}
+      value={feedback}
+      onChange={(e) => setFeedback(e.target.value)}
       rows="6"
       cols="50"
     />
@@ -118,12 +111,12 @@ const FeedbackDialog = ({ userId }) => {
       <button
         style={{
           ...styles.submitButton,
-          ...(isSubmitting ? styles.submittingButton : {}),
+          ...(loading ? styles.submittingButton : {}),
         }}
-        onClick={handleSubmitFeedback}
-        disabled={isSubmitting}
+        onClick={handleSubmit}
+        disabled={loading}
       >
-        {isSubmitting ? "Submitting..." : "Submit Feedback"}
+        {loading ? "Submitting..." : "Submit Feedback"}
       </button>
     </div>
   </div>

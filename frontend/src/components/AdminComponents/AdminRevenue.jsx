@@ -1,6 +1,6 @@
-
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { API } from '../../config';
 
 /**
  * AdminRevenue component to calculate revenue and net profit for the gym.
@@ -188,7 +188,8 @@ const AdminRevenue = () => {
   const fetchTotalSales = async (startDate, endDate) => {
     try {
       const response = await axios.get(
-        `http://13.211.182.131:5000/api/Order/TotalSales/${startDate}/${endDate}`, { withCredentials: true }
+        `${API.ORDER.TOTAL_SALES}/${startDate}/${endDate}`,
+        { withCredentials: true }
       );
       setTotalSales(response.data.totalSales);
     } catch (err) {

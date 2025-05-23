@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API } from '../../config';
 
 /**
  * Component to manage suggested products on the home page.
@@ -13,19 +14,20 @@ const ManageSuggestedProducts = () => {
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [resources, setResources] = useState([]);
+
   const fetchResources = async () => {
     try {
-      const response = await axios.get('http://13.211.182.131:5000/api/Admin/AllResources');
+      const response = await axios.get(API.ADMIN.ALL_RESOURCES);
       setResources(response.data);
     } catch (err) {
       console.log(err);
     }
   };
+
   useEffect(() => {
-    // Fetch all products on component load
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://13.211.182.131:5000/api/products/AllProducts', { withCredentials: true }); // Update with your backend route
+        const response = await axios.get(API.PRODUCTS.ALL_PRODUCTS, { withCredentials: true });
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -66,7 +68,7 @@ const ManageSuggestedProducts = () => {
     }
 
     try {
-      const response = await axios.post('http://13.211.182.131:5000/api/Admin/save-suggested-products', { productIds: selectedProducts }
+      const response = await axios.post(API.ADMIN.SAVE_SUGGESTED_PRODUCTS, { productIds: selectedProducts }
         , { withCredentials: true }
       );
       setSelectedProducts([]);

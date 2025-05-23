@@ -1,7 +1,14 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { BACKEND_URL } from '../config';
 import { useAuthContext } from './AuthContext';
-export const SocketContext = createContext();
+
+const SocketContext = createContext();
+
+export const useSocket = () => {
+  return useContext(SocketContext);
+};
+
 /**
  * The SocketProvider component is a context provider that wraps the
  * application. It is responsible for connecting to the server, and
@@ -35,14 +42,18 @@ export const SocketContext = createContext();
  */
 export const SocketProvider = ({ children }) => {
   const {Authuser}=useAuthContext();
-  const socket = io('http://13.211.182.131:5000/',{
-    query:{Authuser:Authuser?._id || null},
- 
-  });
-  const [socketId, setSocketId] = useState(null);
+  const [socket, setSocket] = useState(null);
+
   useEffect(() => {
+    const socket = io(BACKEND_URL, {
+      withCredentials: true,
+      query: { Authuser: Authuser?._id || null },
+    });
+
+    setSocket(socket);
+
     socket.on('connect', () => {
-      setSocketId(socket.id);
+      console.log('Connected to server');
     });
     socket.on('disconnect', () => {
       console.log('Disconnected from server');  
@@ -51,12 +62,15 @@ export const SocketProvider = ({ children }) => {
       console.log('Received message:', data);
       // Handle the received message, e.g., update state
     });
+
     return () => {
+      socket.disconnect();
       socket.off('connect');
       socket.off('disconnect');
       socket.off('receive_message');
     };
-  }, []);
+  }, [Authuser]);
+
   const registerUser = (userId) => {
     socket.emit('register', userId);
     console.log(`Registered user with ID: ${userId}`);
@@ -66,9 +80,9 @@ export const SocketProvider = ({ children }) => {
     socket.emit('send_message', { receiverId, message });
     console.log(`Message sent to ${receiverId}: ${message} from socketContext.jsx`);
   };
+
   const value = {
     socket,
-    socketId,
     registerUser,
     sendMessageSocket, 
   };

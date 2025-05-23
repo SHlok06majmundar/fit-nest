@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API } from '../../config';
 
 /**
  * A component to manage events, allowing users to view, add, edit, and remove events.
@@ -28,7 +29,7 @@ const ManageEvents = () => {
      */
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://13.211.182.131:5000/api/Admin/get-events', { withCredentials: true }); // Update with your backend route
+        const response = await axios.get(API.ADMIN.GET_EVENTS, { withCredentials: true });
         setEvents(response.data || []);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -88,7 +89,7 @@ const ManageEvents = () => {
    */
   const saveEvents = async () => {
     try {
-      await axios.post('http://13.211.182.131:5000/api/Admin/save-events', { events }, { withCredentials: true });
+      await axios.post(API.ADMIN.SAVE_EVENTS, { events }, { withCredentials: true });
       alert('Events updated successfully!');
     } catch (error) {
       console.error('Error saving events:', error);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API } from '../../config';
 
 const ManageCompanyInfo = () => {
   const [companyInfo, setCompanyInfo] = useState({
@@ -16,7 +17,7 @@ const ManageCompanyInfo = () => {
   useEffect(() => {
     const fetchCompanyInfo = async () => {
       try {
-        const response = await axios.get(`http://13.211.182.131:5000/api/Admin/get-footer-info`, { withCredentials: true });
+        const response = await axios.get(API.ADMIN.GET_FOOTER_INFO, { withCredentials: true });
         setCompanyInfo(response.data[0]);
       } catch (err) {
         console.error("Error fetching company info:", err);
@@ -35,7 +36,7 @@ const ManageCompanyInfo = () => {
   // Save company info
   const handleSaveChanges = async () => {
     try {
-      const response = await axios.put("http://13.211.182.131:5000/api/Admin/update-footer-info", companyInfo, { withCredentials: true });
+      const response = await axios.put(API.ADMIN.UPDATE_FOOTER_INFO, companyInfo, { withCredentials: true });
       alert(response.data.message || "Company info updated successfully!");
     } catch (err) {
       console.error("Error saving company info:", err);

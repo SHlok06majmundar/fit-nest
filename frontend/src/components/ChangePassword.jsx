@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast'; // Optional: for showing toast notifications
 import { useAuthContext } from '../context/AuthContext';
+import { API } from '../config';
 
 /**
  * Component for changing user password either by verifying the old password
@@ -32,20 +33,26 @@ const ChangePassword = () => {
   const { Authuser } = useAuthContext()
 
   // Switch between old password and OTP methods
-  const toggleMethod = () => setUsingOldPassword(!usingOldPassword);
+  const toggleMethod = () => {
+    setUsingOldPassword(!usingOldPassword);
+    setCurrentPassword("");
+    setNewPassword("");
+    setOtp("");
+    setEmail("");
+  };
 
   // Function to handle password change using the old password
   const handleChangePasswordWithOldPassword = async (e) => {
     e.preventDefault();
 
     if (!currentPassword || !newPassword) {
-      toast.error('Please provide both old and new passwords.');
+      toast.error('Please provide both current and new password.');
       return;
     }
 
     setLoading(true);
     try {
-      const response = await axios.post(`http://13.211.182.131:5000/api/auth/changepasswordbyoldpassword/${Authuser._id}`, {
+      const response = await axios.post(`${API.AUTH.CHANGE_PASSWORD}/${Authuser._id}`, {
         currentPassword,
         newPassword,
       }, { withCredentials: true });
@@ -76,7 +83,7 @@ const ChangePassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`http://13.211.182.131:5000/api/auth/changepasswordbyotp/${Authuser._id}`, {
+      const response = await axios.post(`${API.AUTH.CHANGE_PASSWORD_OTP}/${Authuser._id}`, {
         email,
         otp,
         newPassword,
@@ -106,7 +113,7 @@ const ChangePassword = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post(`http://13.211.182.131:5000/api/auth/send-otp`, { email }, { withCredentials: true });
+      const response = await axios.post(API.AUTH.SEND_OTP, { email }, { withCredentials: true });
       if (response.status === 200) {
         toast.success('OTP sent to your email!');
       } else {

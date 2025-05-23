@@ -2,6 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAuthContext } from "../context/AuthContext";
 import axios from "axios";
+import { API } from '../config';
 /**
  * useSignup hook
  * 
@@ -20,13 +21,29 @@ const useSignup = () => {
   const [loading, setLoading] = useState(false);
   const { setAuthuser } = useAuthContext();
 
+  const handleInputErrors = ({ firstName, lastName, mobileNumber, email, password }) => {
+    if (!firstName || !lastName || !mobileNumber || !email || !password) {
+      toast.error("Please fill in all fields");
+      return false;
+    }
+    if (mobileNumber.length !== 10) {
+      toast.error("Please enter a valid mobile number");
+      return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+    return true;
+  };
+
   const signup = async ({ firstName, lastName, mobileNumber, email, password }) => {
     const success = handleInputErrors({ firstName, lastName, mobileNumber, email, password });
     if (!success) return;
 
     setLoading(true);
     try {
-      const res = await fetch('http://13.211.182.131:5000/api/auth/signup', {
+      const res = await fetch(API.AUTH.SIGNUP, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstName, lastName, mobileNumber, email, password }),
@@ -38,7 +55,6 @@ const useSignup = () => {
         throw new Error(data.error);
       }
 
-      // Save user data and update auth context
       localStorage.setItem('gym-user', JSON.stringify(data));
       setAuthuser(data);
       toast.success("Registration successful!");
@@ -48,6 +64,7 @@ const useSignup = () => {
       setLoading(false);
     }
   };
+
   /**
    * The signupAfterPayment property is a function that takes an object with the following
    * properties: firstName, lastName, mobileNumber, email, password and type. The
@@ -58,67 +75,27 @@ const useSignup = () => {
    * @param {{firstName: string, lastName: string, mobileNumber: string, email: string, password: string, type: string}} data
    * @returns {Promise<void>}
    */
-const signupAfterPayment = async ({ firstName, lastName, mobileNumber, email, password , confirmPassword,address,type}) => {
-  const success = handleInputErrors({ firstName, lastName, mobileNumber, email, password });
-  if (!success) return;
+  const signupAfterPayment = async ({ firstName, lastName, mobileNumber, email, password, confirmPassword, address, type }) => {
+    const success = handleInputErrors({ firstName, lastName, mobileNumber, email, password });
+    if (!success) return;
 
-  setLoading(true);
-  try {
-  const response=await axios.post(`http://13.211.182.131:5000/api/auth/signup-after-pay-for-new-membership`,{
-    firstName, lastName, mobileNumber, email, password,type,address
-  });
-  if(response.data.message==='SUCCESS'){
-    toast.success("Registration successful!");  
-    localStorage.setItem('AuthuserId', JSON.stringify(response.data.AuthuserId));
-    setLoading(false);
-  }
-  } catch (error) {
-    // setLoading(false);
-    console.log(error)
-    toast.error(error.response.data.error);
-  }
- 
-}
-  return { loading, signup,signupAfterPayment };
+    setLoading(true);
+    try {
+      const response = await axios.post(API.AUTH.SIGNUP_AFTER_PAYMENT, {
+        firstName, lastName, mobileNumber, email, password, type, address
+      });
+      if (response.data.message === 'SUCCESS') {
+        toast.success("Registration successful!");  
+        localStorage.setItem('AuthuserId', JSON.stringify(response.data.AuthuserId));
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.error);
+    }
+  };
+
+  return { loading, signup, signupAfterPayment };
 };
 
 export default useSignup;
-
-/**
- * Validates the input fields for signup.
- *
- * This function checks if all the fields are filled.
- * It also validates the mobile number and email format using regular expressions.
- * If any validation fails, an error message is displayed and the function
- * returns false. If all validations pass, the function returns true.
- *
- * @param {{firstName: string, lastName: string, mobileNumber: string, email: string, password: string}} data
- * @returns {boolean} - Returns true if all validations pass, otherwise false
- */
-function handleInputErrors({ firstName, lastName, mobileNumber, email, password }) {
-  if (!firstName || !lastName || !mobileNumber || !email || !password) {
-    toast.error("Please fill in all fields");
-    return false;
-  }
-
-  // Validate mobile number format
-  if (!/^\d{10}$/.test(mobileNumber)) {
-    toast.error("Mobile number must be 10 digits");
-    return false;
-  }
-
-  // Validate email format
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    toast.error("Invalid email address");
-    return false;
-  }
-
-  // Validate password and confirm password
-
-  if (password.length < 6) {
-    toast.error("Password must be at least 6 characters");
-    return false;
-  }
-
-  return true;
-}

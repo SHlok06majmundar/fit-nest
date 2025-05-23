@@ -48,7 +48,10 @@ app.use(
 // Optionally configure Helmet for specific needs
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: ["http://localhost:3000","http://localhost:3001" ,"https://fit-nest.onrender.com","https://www.fit-nest.in"], credentials: true }));
+app.use(cors({ 
+  origin: ["http://13.211.182.131:3000"], 
+  credentials: true 
+}));
 app.use(bodyParser.json());
 //middleware
 app.use('/api/auth', authRoutes);

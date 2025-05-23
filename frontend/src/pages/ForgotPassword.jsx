@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { API } from '../config';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ const ForgotPassword = () => {
   const sendOtp = async () => {
     try {
       setLoading(true);
-      await axios.post("http://13.211.182.131:5000/api/auth/send-otp", {
+      await axios.post(API.AUTH.SEND_OTP, {
         email: emailToChange ? emailToChange : email,
         reason: "forgot-password",
       }, {
@@ -39,10 +40,9 @@ const ForgotPassword = () => {
   // Verify the OTP
   const verifyOtp = async () => {
     try {
-      const response = await axios.post("http://13.211.182.131:5000/api/auth/verify-otp", {
+      const response = await axios.post(API.AUTH.VERIFY_OTP, {
         email: emailToChange ? emailToChange : email,
         otp,
-
       }, { withCredentials: true });
       if (response.data.verified) {
         setOtpVerified(true);
@@ -64,7 +64,7 @@ const ForgotPassword = () => {
     }
 
     try {
-      await axios.post("http://13.211.182.131:5000/api/auth/reset-password", {
+      await axios.post(API.AUTH.RESET_PASSWORD, {
         email: emailToChange ? emailToChange : email,
         newPassword,
       }, { withCredentials: true });
@@ -94,97 +94,78 @@ const ForgotPassword = () => {
           </div>
         )}
 
-        <div className="space-y-4">
-          {!otpVerified && (
-            <>
-              {/* Email Input */}
-              <div>
-                <label className="block text-sm font-medium text-green-600 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full px-4 py-2 bg-white border border-green-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
-                  value={emailToChange ? emailToChange : email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={!!emailToChange}
-                />
-              </div>
-              {!otpSent && (
-                <button
-                  onClick={sendOtp}
-                  className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-200"
-                  disabled={loading}
-                >
-                  {loading ? "Sending..." : "Send OTP"}
-                </button>
-              )}
-
-              {/* OTP Input */}
-              {otpSent && (
-                <div>
-                  <label className="block text-sm font-medium text-green-600 mb-1">
-                    OTP
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter OTP"
-                    className="w-full px-4 py-2 bg-white border border-green-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                  />
-                  <button
-                    onClick={verifyOtp}
-                    className="w-full bg-green-600 text-white py-2 rounded-lg mt-2 hover:bg-green-700 transition duration-200"
-                    disabled={loading}
-                  >
-                    {loading ? "Verifying..." : "Verify OTP"}
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Reset Password Fields */}
-          {otpVerified && (
-            <>
-              <div>
-                <label className="block text-sm font-medium text-green-600 mb-1">
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Enter new password"
-                  className="w-full px-4 py-2 bg-white border border-green-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-green-600 mb-1">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Confirm new password"
-                  className="w-full px-4 py-2 bg-white border border-green-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-
-              <button
-                onClick={handleResetPassword}
-                className="w-full bg-green-600 text-white py-2 rounded-lg mt-4 hover:bg-green-700 transition duration-200"
-                disabled={loading}
-              >
-                {loading ? "Resetting..." : "Reset Password"}
-              </button>
-            </>
-          )}
-        </div>
+        {!otpSent ? (
+          <div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Email</label>
+              <input
+                type="email"
+                value={emailToChange || email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:border-green-500 focus:outline-none"
+                placeholder="Enter your email"
+                disabled={!!emailToChange}
+              />
+            </div>
+            <button
+              onClick={sendOtp}
+              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition-colors"
+              disabled={loading}
+            >
+              {loading ? "Sending..." : "Send OTP"}
+            </button>
+          </div>
+        ) : !otpVerified ? (
+          <div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">OTP</label>
+              <input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:border-green-500 focus:outline-none"
+                placeholder="Enter OTP"
+              />
+            </div>
+            <button
+              onClick={verifyOtp}
+              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition-colors"
+              disabled={loading}
+            >
+              {loading ? "Verifying..." : "Verify OTP"}
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">New Password</label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:border-green-500 focus:outline-none"
+                placeholder="Enter new password"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Confirm Password</label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:border-green-500 focus:outline-none"
+                placeholder="Confirm new password"
+              />
+            </div>
+            <button
+              onClick={handleResetPassword}
+              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition-colors"
+              disabled={loading}
+            >
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

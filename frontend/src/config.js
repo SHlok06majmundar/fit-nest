@@ -1,0 +1,80 @@
+export const FRONTEND_URL = 'http://13.211.182.131:3000';
+export const BACKEND_URL = 'http://13.211.182.131:5000';
+
+// API endpoints
+export const API = {
+  AUTH: {
+    LOGIN: `${BACKEND_URL}/api/auth/login`,
+    LOGIN_ADMIN: `${BACKEND_URL}/api/auth/login-admin`,
+    SIGNUP: `${BACKEND_URL}/api/auth/signup`,
+    LOGOUT: `${BACKEND_URL}/api/auth/logout`,
+    SEND_OTP: `${BACKEND_URL}/api/auth/send-otp`,
+    VERIFY_OTP: `${BACKEND_URL}/api/auth/verify-otp`,
+    RESET_PASSWORD: `${BACKEND_URL}/api/auth/reset-password`,
+    CHANGE_PASSWORD: `${BACKEND_URL}/api/auth/changepasswordbyoldpassword`,
+    CHANGE_PASSWORD_OTP: `${BACKEND_URL}/api/auth/changepasswordbyotp`,
+  },
+  ADMIN: {
+    ALL_RESOURCES: `${BACKEND_URL}/api/Admin/AllResources`,
+    GET_FOOTER_INFO: `${BACKEND_URL}/api/Admin/get-footer-info`,
+    GET_DISCOUNT_CODES: `${BACKEND_URL}/api/Admin/get-discount-codes`,
+    ALL_MEMBERSHIP_PLANS: `${BACKEND_URL}/api/Admin/AllMembershipPlans`,
+    CREATE_MEMBER: `${BACKEND_URL}/api/Admin/Create-Member`,
+  },
+  PRODUCTS: {
+    ALL_PRODUCTS: `${BACKEND_URL}/api/products/AllProducts`,
+    PRODUCT_BY_ID: `${BACKEND_URL}/api/products/product-by-id`,
+    DECREMENT_PRODUCT_GUEST: `${BACKEND_URL}/api/products/decrementProduct-guest`,
+  },
+  CART: {
+    GET_CARTS: `${BACKEND_URL}/api/Cart/GetCarts`,
+    ADD_TO_CART: `${BACKEND_URL}/api/Cart/AddToCart`,
+    DELETE_FROM_CART: `${BACKEND_URL}/api/Cart/DeleteFromCart`,
+    DELETE_FROM_CART_GUEST: `${BACKEND_URL}/api/Cart/DeleteFromCart-guest`,
+    LOCK_PRODUCT_DURING_PAY: `${BACKEND_URL}/api/Cart/lockProductDuringPay`,
+    LOCK_PRODUCT_DURING_PAY_GUEST: `${BACKEND_URL}/api/Cart/lockProductDuringPay-guest`,
+    RELEASE_LOCK_DUE_TO_PAY_FAILURE: `${BACKEND_URL}/api/Cart/releaseLockDueToPayFailure`,
+    RELEASE_LOCK_DUE_TO_PAY_FAILURE_GUEST: `${BACKEND_URL}/api/Cart/releaseLockDueToPayFailure-guest`,
+    ADD_TO_CART_FROM_LOCAL_STORAGE: `${BACKEND_URL}/api/Cart/AddToCart-from-local-storage`,
+    DECREMENT_CART: `${BACKEND_URL}/api/Cart/DecrementCart`,
+  },
+  ORDER: {
+    GET_ALL_ORDERS: `${BACKEND_URL}/api/Order/GetAllOrders`,
+    CANCEL_ORDER: `${BACKEND_URL}/api/Order/CancelOrder`,
+    UPDATE_ORDER_ADDRESS: `${BACKEND_URL}/api/Order/UpdateOrderAddress`,
+    ORDER_DETAILS: `${BACKEND_URL}/api/Order/order-details`,
+    ORDER_DETAILS_GUEST: `${BACKEND_URL}/api/Order/order-details-guest`,
+  },
+  PAYMENT: {
+    CREATE_ORDER_MULTIPLE: `${BACKEND_URL}/api/Payment/create-order-multiple`,
+    CREATE_ORDER_MULTIPLE_GUEST: `${BACKEND_URL}/api/Payment/create-order-multiple-guest`,
+    VERIFY_PAYMENT_MULTIPLE: `${BACKEND_URL}/api/Payment/verify-payment-for-multiple`,
+    VERIFY_PAYMENT_MULTIPLE_GUEST: `${BACKEND_URL}/api/Payment/verify-payment-for-multiple-guest`,
+    CREATE_ORDER_TRAINER: `${BACKEND_URL}/api/Payment/create-order-for-trainer`,
+    VERIFY_PAYMENT_TRAINER: `${BACKEND_URL}/api/Payment/verify-payment-for-trainer`,
+    CREATE_ORDER_MEMBERSHIP: `${BACKEND_URL}/api/Payment/create-order-for-membership`,
+    VERIFY_PAYMENT_MEMBERSHIP: `${BACKEND_URL}/api/Payment/verify-payment-for-membership`,
+    CHECK_STATUS_ORDERS: `${BACKEND_URL}/api/Payment/check-status-orders`,
+    CHECK_STATUS_ORDERS_NOT_LOGGED_IN: `${BACKEND_URL}/api/Payment/check-status-orders-not-logged-in`,
+    REQUEST_REFUND: `${BACKEND_URL}/api/Payment/request-refund`,
+  },
+  TRAINER: {
+    ALL_TRAINERS: `${BACKEND_URL}/api/Trainer/AllTrainers`,
+    ADD_TRAINER: `${BACKEND_URL}/api/Trainer/AddTrainer`,
+    UPDATE_SHIFT: `${BACKEND_URL}/api/Trainer/update-shift`,
+    DELETE_TRAINER: `${BACKEND_URL}/api/Trainer/delete-trainer`,
+    GET_ASSIGNED_TRAINERS: `${BACKEND_URL}/api/Trainer/GetAssignedTrainers`,
+    APPROVE_TRAINER: `${BACKEND_URL}/api/Trainer/approve-trainer`,
+    REMOVE_TRAINER_REFUND: `${BACKEND_URL}/api/Trainer/remove-trainer-refund`,
+    REMOVE_TRAINER: `${BACKEND_URL}/api/Trainer/RemoveTrainer`,
+    REQUEST_TO_PAY_FOR_USER: `${BACKEND_URL}/api/Trainer/request-to-pay-for-user`,
+    RATE_TRAINER: `${BACKEND_URL}/api/Trainer/rate`,
+  },
+  USER: {
+    GET_USER_BY_ID: `${BACKEND_URL}/api/users/GetUserById`,
+    SUBMIT_FEEDBACK: `${BACKEND_URL}/api/users/submit-feedback`,
+    REQUEST_CHANGE_INFO: `${BACKEND_URL}/api/users/requestToChangeInfo`,
+    WORKOUT_DIET_PDF_REQUEST: `${BACKEND_URL}/api/users/workoutDietPdfReguest`,
+    UPDATE_ADDRESS: `${BACKEND_URL}/api/users/change-address`,
+  }
+}; 

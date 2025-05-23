@@ -11,6 +11,8 @@ import { useAuthContext } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { API } from '../config';
+
 const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems, setCartItems } = useCart();
@@ -23,43 +25,6 @@ const CartPage = () => {
   });
   const { productsMap, Authuser, setProductsMap, setOrderingProduct } = useAuthContext();
   const [editedAddress, setEditedAddress] = useState(Authuser?.Address || "");
-  const GetProductById = async (id) => {
-    try {
-      const response = await axios.get(`http://13.211.182.131:5000/api/products/product-by-id/${id}`, { withCredentials: true });
-      if (response.status === 200) {
-        return response.data;
-      }
-    }
-    catch (Err) {
-      console.log(Err);
-    }
-  }
-  const fetchCartProductsOfUser = async (id) => {
-    if (id === null) {
-      return;
-    }
-    else {
-      try {
-        const response = await axios.get(`http://13.211.182.131:5000/api/Cart/GetCarts/${id}`, { withCredentials: true });
-        setCartItems(response.data);
-      }
-      catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    }
-  }
-  useEffect(() => {
-    if (!Authuser) {
-      const localCart = localStorage.getItem("LocalCart")
-        ? JSON.parse(localStorage.getItem("LocalCart"))
-        : [];
-      setCartItems(localCart);
-    }
-  }, [Authuser]);
-  useEffect(() => {
-    fetchCartProductsOfUser(Authuser ? Authuser._id : null);
-
-  }, [])
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [coupon, setCoupon] = useState("");
   const isInitialRender = useRef(true);
@@ -70,36 +35,67 @@ const CartPage = () => {
     contact: "+1 234 567 890",
     address: Authuser ? Authuser?.Address : "",
   });
-
-  //   const [totalAmount, setTotalAmount] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [newAddress, setNewAddress] = useState(Authuser?.Address);
-  //   const totalAmount = selectedProducts.reduce((total, product) => {
-  //     const productDetails = productsMap[product.productId];
-  //     return total + (productDetails?.price || 0) * product.count ;
-  //   }, 0) ;
   const [discountCodes, setDiscountCodes] = useState([]);
-  // Fetch discount codes on component load
-  useEffect(() => {
-    const fetchDiscountCodes = async () => {
-      try {
-        const response = await axios.get('http://13.211.182.131:5000/api/Admin/get-discount-codes', { withCredentials: true }); // Update with your backend route
-        setDiscountCodes(response.data || []);
-      } catch (error) {
-        console.error('Error fetching discount codes:', error);
-      }
-    };
 
-    fetchDiscountCodes();
-  }, []);
+  const fetchProductDetails = async (id) => {
+    try {
+      const response = await axios.get(`${API.PRODUCTS.PRODUCT_BY_ID}/${id}`, { withCredentials: true });
+      setProduct(response.data);
+    } catch (error) {
+      console.error('Error fetching product:', error);
+    }
+  };
+
+  const fetchCartProductsOfUser = async (id) => {
+    try {
+      const response = await axios.get(`${API.CART.GET_CARTS}/${id}`, { withCredentials: true });
+      setCartItems(response.data);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+    }
+  };
+
+  const fetchDiscountCodes = async () => {
+    try {
+      const response = await axios.get(API.ADMIN.GET_DISCOUNT_CODES, { withCredentials: true });
+      setDiscountCodes(response.data || []);
+    } catch (error) {
+      console.error('Error fetching discount codes:', error);
+    }
+  };
+
+  const handleDecrementQuantity = async (product) => {
+    try {
+      if (Authuser) {
+        await axios.put(`${API.CART.DECREMENT_CART}/${Authuser._id}/${product.cart.product}`);
+      } else {
+        await axios.put(`${API.PRODUCTS.DECREMENT_PRODUCT_GUEST}/${product.cart.product}`);
+      }
+      // ... rest of the function
+    } catch (error) {
+      console.error('Error decrementing quantity:', error);
+    }
+  };
+
+  const handleAddToCart = async (product) => {
+    try {
+      await axios.put(`${API.CART.ADD_TO_CART}/${Authuser._id}/${product.cart.product}`, {}, { withCredentials: true });
+      // ... rest of the function
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
   const totalAmount = cartItems?.reduce((total, item) => total + (productsMap[item?.cart?.product]?.price || 0) * item?.cart?.count, 0);
   useEffect(() => {
     setProductsMap(JSON.parse(localStorage.getItem("gym-products-map")));
   }, [])
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://13.211.182.131:5000/api/products/AllProducts', { withCredentials: true });
+      const response = await axios.get(API.PRODUCTS.ALL_PRODUCTS, { withCredentials: true });
       const map = {};
       response.data.forEach(product => {
         map[product._id] = product;
@@ -124,18 +120,6 @@ const CartPage = () => {
       ]);
     }
   };
-  // const handlePlaceOrder = () => {
-  //   if(!Authuser){
-  //   const products=localStorage.getItem("LocalCart")?JSON.parse(localStorage.getItem("LocalCart")):[]
-  //   }
-  //   const products = cartItems.map(item => ({
-  //       productId: item.cart.product, // Assuming product is the ID
-  //       count: item.cart.count,
-  //     }));
-  //     setSelectedProducts(products);
-  //   setOrderingProduct(products);
-  //   navigate(`/payment`, { state: {selectedProducts:products ,profileData,discount:totalAmount * discount,GuestDetails:guestDetails} });
-  // };
 
   const handlePlaceOrder = async () => {
     let products = [];
@@ -195,15 +179,13 @@ const CartPage = () => {
     if (!Authuser) {
       try {
         const localCart = JSON.parse(localStorage.getItem("LocalCart")) || [];
-        // Check if the product is already in the cart
         const existingProductIndex = localCart.findIndex(
           (item) => item.cart.product === product.cart.product
         );
         if (existingProductIndex !== -1) {
-          // Send the existing cart item to the API
           const cartItem = localCart[existingProductIndex];
           const response = await axios.put(
-            `http://13.211.182.131:5000/api/products/decrementProduct-guest/${product.cart.product}`,
+            `${API.PRODUCTS.DECREMENT_PRODUCT_GUEST}/${product.cart.product}`,
             { cartItem },
             { withCredentials: true }
           );
@@ -216,13 +198,12 @@ const CartPage = () => {
             );
           }
         } else {
-          // Create a new cart item and send it to the API
           const newCartItem = {
             cart: { product: product.cart.product, count: 1 },
           };
 
           const response = await axios.put(
-            `http://13.211.182.131:5000/api/products/decrementProduct-guest/${product.cart.product}`,
+            `${API.PRODUCTS.DECREMENT_PRODUCT_GUEST}/${product.cart.product}`,
             { cartItem: newCartItem },
             { withCredentials: true }
           );
@@ -237,7 +218,9 @@ const CartPage = () => {
     }
     try {
       const response = await axios.put(
-        `http://13.211.182.131:5000/api/Cart/AddToCart/${Authuser._id}/${product.cart.product}`, {}, { withCredentials: true }
+        `${API.CART.ADD_TO_CART}/${Authuser._id}/${product.cart.product}`,
+        {},
+        { withCredentials: true }
       );
       if (response.data.message === "Product added to cart successfully") {
         toast.success('INCREMENTED');
@@ -266,7 +249,7 @@ const CartPage = () => {
               ? { ...item, cart: { ...item.cart, count: item.cart.count - 1 } }
               : item
           )
-          .filter((item) => item.cart.count > 0); // Remove items with count 0
+          .filter((item) => item.cart.count > 0);
         localStorage.setItem("LocalCart", JSON.stringify(updatedCart));
         setCartItems(updatedCart);
         setSelectedProducts((prev) =>
@@ -280,8 +263,9 @@ const CartPage = () => {
     }
     try {
       const response = await axios.put(
-        `http://13.211.182.131:5000/api/Cart/DecrementCart/${Authuser._id}/${product.cart.product}`
-        , {}, { withCredentials: true }
+        `${API.CART.DECREMENT_CART}/${Authuser._id}/${product.cart.product}`,
+        {},
+        { withCredentials: true }
       );
       if (response.data.message === "Product removed from cart successfully") {
         toast.success('one product removed from cart');
@@ -311,16 +295,16 @@ const CartPage = () => {
       return;
     }
     try {
-      const response = await axios.delete(`http://13.211.182.131:5000/api/Cart/DeleteFromCart/${Authuser._id}/${productId}`,
+      const response = await axios.delete(
+        `${API.CART.DELETE_FROM_CART}/${Authuser._id}/${productId}`,
         { withCredentials: true }
       );
       if (response.data.message === 'Product deleted from cart successfully') {
         setCartItems(prevItems => prevItems.filter(item => item.cart.product !== productId));
         setSelectedProducts(prevProducts => prevProducts.filter(product => product.productId !== productId));
       }
-    }
-    catch (error) {
-
+    } catch (error) {
+      console.error('Error removing product from cart:', error);
     }
   };
 
@@ -349,21 +333,22 @@ const CartPage = () => {
   const handleSaveAddress = async () => {
     if (!Authuser) {
       setProfileData({ ...profileData, address: newAddress });
-      setIsEditingAddress(false); // Exit editing mode after saving
+      setIsEditingAddress(false);
       return;
-    }
-    else {
+    } else {
       try {
-        const response = await axios.put(`http://13.211.182.131:5000/api/users/change-address/${Authuser._id}`, { address: editedAddress }, { withCredentials: true });
+        const response = await axios.put(
+          `${API.USER.UPDATE_ADDRESS}/${Authuser._id}`,
+          { address: editedAddress },
+          { withCredentials: true }
+        );
         if (response.status === 200) {
           toast.success('Address updated successfully');
           localStorage.setItem("gym-user", JSON.stringify(response.data));
-
           setProfileData({ ...profileData, address: newAddress });
-          setIsEditingAddress(false); // Exit editing mode after saving
+          setIsEditingAddress(false);
         }
-      }
-      catch (err) {
+      } catch (err) {
         console.error('Error saving address:', err);
       }
     }

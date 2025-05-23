@@ -2,6 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { API } from '../config';
 /**
  * useLogin hook
  * 
@@ -31,30 +32,37 @@ const useLogin = () => {
    * @param {string} email The user's email address
    * @param {string} password The user's password
    */
+  const handleInputErrors = (email, password) => {
+    if (!email || !password) {
+      toast.error('Please fill in all fields');
+      return false;
+    }
+    return true;
+  };
+
   const login = async (email, password) => {
     const success = handleInputErrors(email, password);
     if (!success) return;
   
     setLoading(true);
     try {
-      const res = await fetch('http://13.211.182.131:5000/api/auth/login', {
+      const res = await fetch(API.AUTH.LOGIN, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }) // Sending email and password
-        ,credentials: "include",
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
       if (data.error) {
+        toast.error(data.error);
         throw new Error(data.error);
       }
       // Store user data and set authentication context
       localStorage.setItem('gym-user', JSON.stringify(data));
       setAuthuser(data);
       if(data.isAdmin){
-      navigate('/');
-      }
-      else{
+        navigate('/');
+      } else {
         navigate('/profile-page');
       }
       toast.success("Login successful!");
@@ -70,10 +78,10 @@ const useLogin = () => {
   
     setLoading(true);
     try {
-      const res = await fetch('http://13.211.182.131:5000/api/auth/login-admin', {
+      const res = await fetch(API.AUTH.LOGIN_ADMIN, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }) ,// Sending email and password,
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
@@ -97,31 +105,3 @@ const useLogin = () => {
 };
 
 export default useLogin;
-
-/**
- * Validates the input fields for login.
- *
- * This function checks if the email and password fields are filled.
- * It also validates the email format using a regular expression.
- * If any validation fails, an error message is displayed and the function
- * returns false. If all validations pass, the function returns true.
- *
- * @param {string} email - The user's email address.
- * @param {string} password - The user's password.
- * @returns {boolean} - Returns true if all validations pass, otherwise false.
- */
-function handleInputErrors(email, password) {
-  if (!email || !password) {
-    toast.error("Please fill in all fields");
-    return false;
-  }
-
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    toast.error("Please enter a valid email address");
-    return false;
-  }
-
-  return true;
-}

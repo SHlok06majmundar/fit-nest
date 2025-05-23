@@ -1,4 +1,3 @@
-
 import React, { useContext, useEffect, useState } from 'react'
 import { useAuthContext } from '../../context/AuthContext'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
@@ -7,6 +6,8 @@ import * as XLSX from 'xlsx';  // Import xlsx library for Excel parsing
 import { SocketContext } from '../../context/SocketContext';
 import EditProductDialog from './EditProductDialog';
 import toast from 'react-hot-toast';
+import { API } from '../../config';
+
 /**
  * Component that renders a list of products with filtering and sorting options.
  * Allows Admins to add, edit, or delete products. Allows users to add products to cart.
@@ -74,13 +75,13 @@ const AdminProductListing = () => {
     image_url: [],
   });
   /**
- * Fetches all products from the database and stores them in state
- * @returns {Promise<void>}
- */
+   * Fetches all products from the database and stores them in state
+   * @returns {Promise<void>}
+   */
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://13.211.182.131:5000/api/products/AllProducts', { withCredentials: true });
-      setProducts(response.data); // Store the products in state
+      const response = await axios.get(API.PRODUCTS.ALL_PRODUCTS, { withCredentials: true });
+      setProducts(response.data);
       const map = {};
       response.data.forEach(product => {
         map[product._id] = product;
@@ -91,9 +92,9 @@ const AdminProductListing = () => {
     }
   };
   /**
- * Handles changes to the product data form by updating the state.
- * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input element
- */
+   * Handles changes to the product data form by updating the state.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input element
+   */
   const handleProductDataChange = (e) => {
     const { name, value } = e.target;
     setProductData(prevState => ({
@@ -133,7 +134,7 @@ const AdminProductListing = () => {
         // Collect promises for each product addition
         addProductPromises.push(
           axios.post(
-            'http://13.211.182.131:5000/api/products/AddProduct',
+            API.PRODUCTS.ADD_PRODUCT,
             { product_name, product_category, price, description,MRP, image_url, stock_quantity },
             { withCredentials: true }
           )
@@ -158,6 +159,7 @@ const AdminProductListing = () => {
   };
 
   /**
+   * Deletes a product from the database.
  * Deletes a product from the database.
  * Sends a DELETE request to the server with the product ID in the request URL.
  * If successful, it removes the product from the products state.
