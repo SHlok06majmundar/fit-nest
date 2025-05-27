@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import axios from "axios"
 import Typewriter from "typewriter-effect"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import ourGymImg from "../assets/ourgym.png"
 
 const AboutUs = () => {
   const [resources, setResources] = useState([])
@@ -15,7 +16,7 @@ const AboutUs = () => {
   const getAllResources = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://13.211.182.131:5000/api/Admin/AllResources`)
+      const response = await axios.get(`http://16.176.121.1/api/Admin/AllResources`)
       setResources(response.data)
       setLocations(response.data.find((resource) => resource.title === "ABOUT_US")?.customResource)
     } catch (err) {
@@ -33,8 +34,7 @@ const AboutUs = () => {
   const gymImages = [
     {
       id: "gym1",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-04-25%20at%2013.49.43_73d235e6.jpg-8BBKETnJQ6KodRGRcWJSvhqXgevjMo.jpeg",
+      image: "/images/IMG_4095=ok.jpg",
       title: "State-of-the-Art Equipment",
       address: "Main Training Floor",
       description:
@@ -42,8 +42,7 @@ const AboutUs = () => {
     },
     {
       id: "gym2",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-04-25%20at%2013.49.18_3e6725a4.jpg-B4N48Im0i2A5YXw0hqXuKQ1eOj2VUm.jpeg",
+      image: "/images/IMG_4085=ok.JPG",
       title: "#WeTrainLikeFamily",
       address: "Motivation Zone",
       description:
@@ -51,8 +50,7 @@ const AboutUs = () => {
     },
     {
       id: "gym3",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-04-25%20at%2013.50.06_ff7f3e54.jpg-jNE6yJIKJOkWycJnVUlnVnIwsiSwM5.jpeg",
+      image: "/images/IMG_4080=ok.JPG",
       title: "Functional Training Area",
       address: "Central Workout Space",
       description:
@@ -60,8 +58,7 @@ const AboutUs = () => {
     },
     {
       id: "gym4",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-04-25%20at%2013.50.31_9d05626f.jpg-G0ys2ci9EGxLchp3emlUf7QeydKdTV.jpeg",
+      image: "/images/IMG_4077=ok.JPG",
       title: "Queen of the Gym",
       address: "Women's Training Section",
       description:
@@ -75,8 +72,7 @@ const AboutUs = () => {
       id: "eq1",
       image: "/images/IMG_4095=ok.jpg",
       title: "Premium Strength Training Zone",
-      description:
-        "Our main training floor features the latest strength training equipment for all your fitness needs.",
+      description: "Our main training floor features the latest strength training equipment for all your fitness needs.",
     },
     {
       id: "eq2",
@@ -88,8 +84,7 @@ const AboutUs = () => {
       id: "eq3",
       image: "/images/IMG_4080=ok.JPG",
       title: "Cable Machine Area",
-      description:
-        "Our versatile cable machine section allows for countless exercise variations to target every muscle group.",
+      description: "Our versatile cable machine section allows for countless exercise variations to target every muscle group.",
     },
     {
       id: "eq4",
@@ -102,37 +97,6 @@ const AboutUs = () => {
       image: "/images/IMG_4074=ok.JPG",
       title: "Free Weights Area",
       description: "Comprehensive dumbbell selection ranging from 2kg to 50kg to suit all strength levels.",
-    },
-    {
-      id: "eq6",
-      image: "/images/IMG_4090=ok.JPG",
-      title: "Machine Training Zone",
-      description: "Targeted machine exercises for precise muscle development in our spacious training zone.",
-    },
-    {
-      id: "eq7",
-      image: "/images/IMG_4073=ok.JPG",
-      title: "Dumbbell Station",
-      description:
-        "Clear your mind of can't! Our premium dumbbell station is perfect for all your free weight exercises.",
-    },
-    {
-      id: "eq8",
-      image: "/images/IMG_4081=ok.JPG",
-      title: "Queen of the Gym Area",
-      description: "A dedicated space designed to empower women in their fitness journey with specialized equipment.",
-    },
-    {
-      id: "eq9",
-      image: "/images/IMG_4078=ok.JPG",
-      title: "Cardio and Strength Zone",
-      description: "Our integrated cardio and strength zone allows for efficient circuit training sessions.",
-    },
-    {
-      id: "eq10",
-      image: "/images/IMG_4083=ok.JPG",
-      title: "Premium Leg Press Station",
-      description: "Build powerful lower body strength with our premium leg press machines and squat racks.",
     },
   ]
 
@@ -168,7 +132,7 @@ const AboutUs = () => {
         className="text-center mb-12"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}  
+        transition={{ duration: 1 }}
       >
         <h1 className="text-5xl font-extrabold drop-shadow-lg text-white">About Us</h1>
         <p className="text-green-400 text-center text-xl mb-6 space-x-0"></p>
@@ -188,9 +152,9 @@ const AboutUs = () => {
         transition={{ duration: 1 }}
       >
         <img
-          src={locations && locations[2]?.image} // Replace with a real image URL
+          src={ourGymImg}
           alt="Our Gym"
-          className="w-full md:w-1/2 h-64 object-cover"
+          className="w-full md:w-1/2 h-[400px] object-cover"
         />
         <div className="p-6 md:w-1/2">
           <h2 className="text-3xl font-bold text-white mb-4">
@@ -211,7 +175,7 @@ const AboutUs = () => {
                 ],
                 autoStart: true,
                 loop: true,
-                delay: 5, // Optional: Adjust the typing speed
+                delay: 5,
               }}
             />
           </p>

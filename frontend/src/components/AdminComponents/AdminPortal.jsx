@@ -17,7 +17,7 @@ import { FaChartLine } from "react-icons/fa";
 import { Menu as MenuIcon } from "@mui/icons-material"; // Hamburger icon
 import axios from "axios";
 import AdminFeedbackView from "./AdminFeedbackView";
-import { SocketContext } from "../../context/SocketContext";
+import { useSocket } from "../../context/SocketContext";
 import OrderDialogAdmin from "../AdminComponents/OrderDialogAdmin";
 import { useAuthContext } from "../../context/AuthContext";
 import TrainerDetailsAdmin from "../TrainerComponents/TrainerDetailsAdmin";
@@ -53,7 +53,7 @@ const AdminPortal = () => {
   const [emails, setEmails] = useState([]); // user emails
   const [trainerEmails, setTrainerEmails] = useState([]); // trainer emails
   const { Authuser } = useAuthContext();
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
   const { productsMap, setProductsMap } = useAuthContext();
   const [drawerOpen, setDrawerOpen] = useState(false); // Drawer state
 
@@ -69,7 +69,7 @@ const AdminPortal = () => {
    */
   const fetchEmails = async () => {
     try {
-      const response = await axios.get("http://13.211.182.131:5000/api/users/get-all-emails", { withCredentials: true });
+      const response = await axios.get("http://16.176.121.1/api/users/get-all-emails", { withCredentials: true });
       setEmails(response.data);
     } catch (error) {
       console.error("Error fetching emails:", error);
@@ -88,7 +88,7 @@ const AdminPortal = () => {
 
   const fetchTrainerEmails = async () => {
     try {
-      const response = await axios.get("http://13.211.182.131:5000/api/Trainer/AllMails", { withCredentials: true });
+      const response = await axios.get("http://16.176.121.1/api/Trainer/AllMails", { withCredentials: true });
       setTrainerEmails(response.data);
     } catch (error) {
       console.error("Error fetching emails:", error);
@@ -118,7 +118,7 @@ const AdminPortal = () => {
    */
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://13.211.182.131:5000/api/products/AllProducts", { withCredentials: true });
+      const response = await axios.get("http://16.176.121.1/api/products/AllProducts", { withCredentials: true });
       setProducts(response.data);
       const map = {};
       response.data.forEach((product) => {
@@ -141,7 +141,7 @@ const AdminPortal = () => {
    */
   const fetchMembershipDetails = async () => {
     try {
-      const response = await axios.get("http://13.211.182.131:5000/api/users/MemberShipDetails", { withCredentials: true });
+      const response = await axios.get("http://16.176.121.1/api/users/MemberShipDetails", { withCredentials: true });
       setMemeberShipData(response.data);
     } catch (error) {
       console.log(error);

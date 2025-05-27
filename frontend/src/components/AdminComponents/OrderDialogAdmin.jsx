@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 import axios from 'axios';
-import { SocketContext } from '../../context/SocketContext';
+import { useSocket } from '../../context/SocketContext';
 import OrderDetailsDialog from './OrderDetailsDialog';
 /**
  * The OrderDialogAdmin component renders a dialog box with a table of all orders.
@@ -31,14 +31,14 @@ const OrderDialogAdmin = ({ open, onClose }) => {
     setSelectedOrder(order);
     setOpenDialog(true);
   }
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
 
   /**
    * Fetches all orders from the backend and updates the state with the received orders.
    * Used in the useEffect hook to fetch the orders when the component mounts and when the dialog is opened.
    */
   const fetchUserOrders = async () => {
-    const response = await axios.post(`http://13.211.182.131:5000/api/Order/AllOrders`, {}, { withCredentials: true });
+    const response = await axios.post(`http://16.176.121.1/api/Order/AllOrders`, {}, { withCredentials: true });
     setOrders(response.data.orders);
   };
 
@@ -82,7 +82,7 @@ const OrderDialogAdmin = ({ open, onClose }) => {
   const handleSubmitDate = (orderId) => {
     if (newDeliveryDate === null) return;
     if (window.confirm('Are you sure you want to update the delivery date of this order?')) {
-      axios.put(`http://13.211.182.131:5000/api/Order/EditDeliveryTime/${orderId}`, { deliveryDate: newDeliveryDate, userName: selectedOrder.UserName, email: selectedOrder.UserEmail }
+      axios.put(`http://16.176.121.1/api/Order/EditDeliveryTime/${orderId}`, { deliveryDate: newDeliveryDate, userName: selectedOrder.UserName, email: selectedOrder.UserEmail }
         , { withCredentials: true }
       )
         .then((response) => {
@@ -130,7 +130,7 @@ const OrderDialogAdmin = ({ open, onClose }) => {
     if (newStatus === "Delivered" || newStatus === "CANCELLED") return;
     if (window.confirm('Are you sure you want to update the status of this order?')) {
       axios
-        .put(`http://13.211.182.131:5000/api/Order/EditStatus/${orderId}`, { status: newStatus, userName: selectedOrder.UserName, email: selectedOrder.UserEmail }, { withCredentials: true })
+        .put(`http://16.176.121.1/api/Order/EditStatus/${orderId}`, { status: newStatus, userName: selectedOrder.UserName, email: selectedOrder.UserEmail }, { withCredentials: true })
         .then((response) => {
           alert('Order status updated successfully!');
           setOrders(orders.map((order) =>

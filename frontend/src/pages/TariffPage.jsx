@@ -5,7 +5,7 @@ import "./TariffPage.css"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useAuthContext } from "../context/AuthContext"
 import axios from "axios"
-import { SocketContext } from "../context/SocketContext"
+import { useSocket } from "../context/SocketContext"
 
 const TariffPage = () => {
   const navigate = useNavigate()
@@ -14,7 +14,7 @@ const TariffPage = () => {
   const [loading, setLoading] = useState(false)
   const [loadingplan, setLoadingplan] = useState(false)
 
-  const { socket } = useContext(SocketContext)
+  const { socket } = useSocket()
   const location = useLocation()
   const { Status } = location.state || { Status: "not-valid" }
   console.log(Status, "fom location", typeof Status)
@@ -22,7 +22,7 @@ const TariffPage = () => {
   const fetchPlans = async () => {
     try {
       setLoadingplan(true)
-      const response = await axios.get(`http://13.211.182.131:5000/api/Admin/AllMembershipPlans`)
+      const response = await axios.get(`http://16.176.121.1/api/Admin/AllMembershipPlans`)
       setPlans(response.data)
     } catch (err) {
       setLoadingplan(false)
@@ -36,7 +36,7 @@ const TariffPage = () => {
     if (Authuser) {
       try {
         setLoading(true)
-        const response = await axios.get(`http://13.211.182.131:5000/api/users/GetUserById/${Authuser._id}`, {
+        const response = await axios.get(`http://16.176.121.1/api/users/GetUserById/${Authuser._id}`, {
           withCredentials: true,
         })
         localStorage.setItem("gym-user", JSON.stringify(response.data))

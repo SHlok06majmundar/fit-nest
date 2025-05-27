@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
-import { SocketContext } from "../../context/SocketContext";
+import { useSocket } from "../../context/SocketContext";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -122,11 +122,11 @@ const TrainersAssignedToUsers = ({ userId }) => {
   const [availaibleTrainers, setAvailaibleTrainers] = useState([]);
   const { Authuser } = useAuthContext();
   const navigate = useNavigate();
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
 
   const fetchAvailaibleTrainers = async () => {
     try {
-      const response = await axios.get("http://13.211.182.131:5000/api/Trainer/AllTrainers", { withCredentials: true });
+      const response = await axios.get("http://16.176.121.1/api/Trainer/AllTrainers", { withCredentials: true });
       setAvailaibleTrainers(response.data);
     } catch (error) {
       console.error("Error fetching trainers:", error);
@@ -140,7 +140,7 @@ const TrainersAssignedToUsers = ({ userId }) => {
   useEffect(() => {
     if (userId) {
       axios
-        .get(`http://13.211.182.131:5000/api/Trainer/trainers-assigned-to-user/${userId}`, { withCredentials: true })
+        .get(`http://16.176.121.1/api/Trainer/trainers-assigned-to-user/${userId}`, { withCredentials: true })
         .then((response) => {
           setTrainers(response.data);
         })
@@ -152,7 +152,7 @@ const TrainersAssignedToUsers = ({ userId }) => {
 
   const handleRequestForTrainer = async (trainerId) => {
     try {
-      const response = await axios.put("http://13.211.182.131:5000/api/Trainer/request-trainer", {
+      const response = await axios.put("http://16.176.121.1/api/Trainer/request-trainer", {
         trainerId,
         memberId: Authuser._id,
         memberName: `${Authuser.first_name} ${Authuser.last_name}`,

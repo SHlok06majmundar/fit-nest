@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { SocketContext } from "../../context/SocketContext";
+import { useSocket } from "../../context/SocketContext";
 
 /**
  * AdminFeedbackView component is used to display all the feedbacks provided by
@@ -12,7 +12,7 @@ const AdminFeedbackView = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
   /**
    * Fetches all user feedbacks from the server.
    *
@@ -25,7 +25,7 @@ const AdminFeedbackView = () => {
 
   const fetchFeedbacks = async () => {
     try {
-      const response = await axios.get("http://13.211.182.131:5000/api/users/all-feedbacks", { withCredentials: true });
+      const response = await axios.get("http://16.176.121.1/api/users/all-feedbacks", { withCredentials: true });
       if (response.status === 200) {
         setFeedbacks(response.data.data);
       }

@@ -3,7 +3,7 @@ import { useAuthContext } from '../../context/AuthContext'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import axios from 'axios'
 import * as XLSX from 'xlsx';  // Import xlsx library for Excel parsing
-import { SocketContext } from '../../context/SocketContext';
+import { useSocket } from '../../context/SocketContext';
 import EditProductDialog from './EditProductDialog';
 import toast from 'react-hot-toast';
 import { API } from '../../config';
@@ -30,7 +30,7 @@ const AdminProductListing = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [openDialog, setOpenDialog] = useState(false);  // Dialog state
   const [editingProduct, setEditingProduct] = useState(null);
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
   const [fileName, setFileName] = useState('');
   useEffect(() => {
     socket.on('ProductChanges', (product) => {
@@ -169,7 +169,7 @@ const AdminProductListing = () => {
  */
   const handleDeleteProduct = (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      axios.delete(`http://13.211.182.131:5000/api/products/deleteProduct/${id}`, { withCredentials: true })
+      axios.delete(`http://16.176.121.1/api/products/deleteProduct/${id}`, { withCredentials: true })
         .then(response => {
           if (response.data.message === 'Product deleted successfully') {
             setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
@@ -197,7 +197,7 @@ const AdminProductListing = () => {
   const handleIncrementProduct = async (id) => {
     if (window.confirm('Are you sure you want to increment the stock of this product?')) {
       try {
-        const response = await axios.put(`http://13.211.182.131:5000/api/products/incrementProduct/${id}`, {}, { withCredentials: true });
+        const response = await axios.put(`http://16.176.121.1/api/products/incrementProduct/${id}`, {}, { withCredentials: true });
         if (response.data.message === 'Product stock updated') {
           setProducts(prevProducts => prevProducts.map(product => {
             if (product._id === response.data.updatedProduct._id) {
@@ -224,7 +224,7 @@ const AdminProductListing = () => {
   const handleDecrementProduct = async (id) => {
     if (window.confirm('Are you sure you want to decrement the stock of this product?')) {
       try {
-        const response = await axios.put(`http://13.211.182.131:5000/api/products/decrementProduct/${id}`, {}, { withCredentials: true });
+        const response = await axios.put(`http://16.176.121.1/api/products/decrementProduct/${id}`, {}, { withCredentials: true });
         if (response.data.message === 'Product stock updated') {
           setProducts(prevProducts => prevProducts.map(product => {
             if (product._id === response.data.updatedProduct._id) {
@@ -259,7 +259,7 @@ const AdminProductListing = () => {
    */
   const handleAddProductManual = async () => {
     try {
-      const response = await axios.post('http://13.211.182.131:5000/api/products/AddProduct', productData, { withCredentials: true });
+      const response = await axios.post('http://16.176.121.1/api/products/AddProduct', productData, { withCredentials: true });
       if (response.data) {
         fetchProducts(); // Refresh the product list
       }

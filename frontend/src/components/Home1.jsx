@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css"
 import { useAuthContext } from "../context/AuthContext"
 import axios from "axios"
 import MapImg from "../assets/MAP1.jpg"
+import ourGymImg from "../assets/homelogo.png"
 import toast from "react-hot-toast"
 const Home1 = () => {
   const { Authuser } = useAuthContext()
@@ -30,7 +31,7 @@ const Home1 = () => {
           // Send the existing cart item to the API
           const cartItem = localCart[existingProductIndex]
           const response = await axios.put(
-            `http://13.211.182.131:5000/api/products/decrementProduct-guest/${product._id}`,
+            `http://16.176.121.1/api/products/decrementProduct-guest/${product._id}`,
             { cartItem },
             { withCredentials: true },
           )
@@ -44,7 +45,7 @@ const Home1 = () => {
             cart: { product: product._id, count: 0 },
           }
           const response = await axios.put(
-            `http://13.211.182.131:5000/api/products/decrementProduct-guest/${product._id}`,
+            `http://16.176.121.1/api/products/decrementProduct-guest/${product._id}`,
             { cartItem: newCartItem },
             { withCredentials: true },
           )
@@ -66,7 +67,7 @@ const Home1 = () => {
     }
 
     try {
-      const response = await axios.put(`http://13.211.182.131:5000/api/Cart/AddToCart/${Authuser._id}/${product._id}`, {})
+      const response = await axios.put(`http://16.176.121.1/api/Cart/AddToCart/${Authuser._id}/${product._id}`, {})
       if (response.data.message === "Product added to cart successfully") {
         toast.success("Product added to cart successfully")
         const { cartItem } = response.data
@@ -101,7 +102,7 @@ const Home1 = () => {
   const getAllResources = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://13.211.182.131:5000/api/Admin/AllResources`)
+      const response = await axios.get(`http://16.176.121.1/api/Admin/AllResources`)
       setResources(response.data)
     } catch (err) {
       console.log(err)
@@ -118,13 +119,12 @@ const Home1 = () => {
   return (
     <div className="bg-black text-white font-sans">
       {/* Full-Screen Video Section */}
-      {/* Full-Screen Video Section */}
       <section className="flex justify-center items-center h-screen bg-black">
         <div className="w-full h-screen flex justify-center items-center bg-black">
           <img
             className="w-full h-full object-contain"
-            src={resources.find((resource) => resource.title === "HOME_PAGE_VIDEO")?.resourceLink || "/placeholder.svg"}
-            alt="Home Logo"
+            src={ourGymImg}
+            alt="Our Gym"
           />
         </div>
       </section>
@@ -315,7 +315,7 @@ const Home1 = () => {
               <img
                 src="/images/jerai.avif"
                 alt="Jerai Fitness Equipment"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="absolute inset-0 w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="relative z-20 p-8 h-full flex flex-col">
                 <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300">
@@ -340,7 +340,7 @@ const Home1 = () => {
               <img
                 src="/images/floor.avif"
                 alt="Gym Floor Area"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="absolute inset-0 w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="relative z-20 p-8 h-full flex flex-col">
                 <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300">
@@ -359,7 +359,7 @@ const Home1 = () => {
               <img
                 src="/images/certified.avif"
                 alt="Certified Trainers"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="absolute inset-0 w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="relative z-20 p-8 h-full flex flex-col">
                 <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300">
@@ -378,7 +378,7 @@ const Home1 = () => {
               <img
                 src="/images/yamaha.avif"
                 alt="Music System"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="absolute inset-0 w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="relative z-20 p-8 h-full flex flex-col">
                 <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300">

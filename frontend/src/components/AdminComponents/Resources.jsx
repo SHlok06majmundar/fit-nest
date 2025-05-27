@@ -48,7 +48,7 @@ const Resources = () => {
   const handleDeleteResourceById = async (resourceId) => {
     if (window.confirm('Are you sure you want to delete this resource?')) {
       try {
-        const response = await axios.delete(`http://13.211.182.131:5000/api/Admin/DeleteResource/${resourceId}`, { withCredentials: true });
+        const response = await axios.delete(`http://16.176.121.1/api/Admin/DeleteResource/${resourceId}`, { withCredentials: true });
         if (response.status === 200) {
           setResources((prevResources) => prevResources.filter((resource) => resource._id !== resourceId));
           const existingResources = JSON.parse(localStorage.getItem('gym-resources')) || [];
@@ -116,7 +116,7 @@ const Resources = () => {
 
   const fetchPlans = async () => {
     try {
-      const response = await axios.get('http://13.211.182.131:5000/api/Admin/AllMembershipPlans', { withCredentials: true });
+      const response = await axios.get('http://16.176.121.1/api/Admin/AllMembershipPlans', { withCredentials: true });
       setPlans(response.data);
     } catch (err) {
       console.log(err);

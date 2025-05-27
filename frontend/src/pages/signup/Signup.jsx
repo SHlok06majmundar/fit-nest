@@ -19,7 +19,7 @@ const Signup = ({ type, showPay, setShowPay }) => {
   const fetchResources = async () => {
     try {
       // setLoadingResources(true);
-      const response = await axios.get("http://13.211.182.131:5000/api/Admin/AllResources")
+      const response = await axios.get("http://16.176.121.1/api/Admin/AllResources")
       setResources(response.data)
     } catch (err) {
       console.log(err)

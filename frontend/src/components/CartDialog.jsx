@@ -20,7 +20,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import axios from "axios";
 import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { SocketContext } from "../context/SocketContext";
+import { useSocket } from "../context/SocketContext";
 
 /**
  * A dialog component that renders a list of products in the cart.
@@ -41,7 +41,7 @@ const CartDialog = ({ open, handleClose, cartItems, setcartItems, handleRemoveFr
   const { Authuser } = useAuthContext();
   const navigation = useNavigate();
   const { setOrderingProduct, productsMap, setProductsMap } = useAuthContext();
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const CartDialog = ({ open, handleClose, cartItems, setcartItems, handleRemoveFr
    */
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://13.211.182.131:5000/api/products/AllProducts', { withCredentials: true });
+      const response = await axios.get('http://16.176.121.1/api/products/AllProducts', { withCredentials: true });
       const map = {};
       response.data.forEach(product => {
         map[product._id] = product;
@@ -77,7 +77,7 @@ const CartDialog = ({ open, handleClose, cartItems, setcartItems, handleRemoveFr
   const handleIncrement = async (product) => {
     try {
       const response = await axios.put(
-        `http://13.211.182.131:5000/api/Cart/AddToCart/${Authuser._id}/${product.cart.product}`, {}, { withCredentials: true }
+        `http://16.176.121.1/api/Cart/AddToCart/${Authuser._id}/${product.cart.product}`, {}, { withCredentials: true }
       );
       if (response.data.message === "Product added to cart successfully") {
         setcartItems((prev) =>
@@ -91,7 +91,7 @@ const CartDialog = ({ open, handleClose, cartItems, setcartItems, handleRemoveFr
   const handleDecrement = async (product) => {
     try {
       const response = await axios.put(
-        `http://13.211.182.131:5000/api/Cart/DecrementCart/${Authuser._id}/${product.cart.product}`
+        `http://16.176.121.1/api/Cart/DecrementCart/${Authuser._id}/${product.cart.product}`
         , {}, { withCredentials: true }
       );
       if (response.data.message === "Product deleted from cart successfully") {

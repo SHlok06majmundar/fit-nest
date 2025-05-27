@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { SocketContext } from "../../context/SocketContext";
+import { useSocket } from "../../context/SocketContext";
 import { useAuthContext } from "../../context/AuthContext";
 import { API } from '../../config';
 
@@ -20,7 +20,7 @@ export const ChangeRequestApproval = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
   const { Authuser } = useAuthContext();
 
   /**
@@ -70,7 +70,7 @@ export const ChangeRequestApproval = () => {
    */
   const handleAction = async (requestId, userId, action) => {
     try {
-      const response = await axios.patch(`http://13.211.182.131:5000/api/admin/change-requests/${requestId}`, {
+      const response = await axios.patch(`http://16.176.121.1/api/admin/change-requests/${requestId}`, {
         status: action,
         reviewedBy: Authuser._id,
         userId: userId.toString()

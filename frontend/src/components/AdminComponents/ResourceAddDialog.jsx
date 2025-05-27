@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import axios from 'axios'
-import { SocketContext } from '../../context/SocketContext';
+import { useSocket } from '../../context/SocketContext';
 
 /**
  * The ResourceAddDialog component renders a dialog box with a form to add a new resource.
@@ -22,7 +22,7 @@ const ResourceAddDialog = ({ open, onClose, setResources, fetchResources, resour
     resourceType: '',
     title: '',
   });
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
   const [loading, setLoading] = useState(false); // Add loading state for API request
 
   /**
@@ -50,7 +50,7 @@ const ResourceAddDialog = ({ open, onClose, setResources, fetchResources, resour
     if (window.confirm('Are you sure you want to add this resource?')) {
       setLoading(true); // Show loading indicator
       try {
-        const response = await axios.post(`http://13.211.182.131:5000/api/Admin/AddNewResource`, resource, { withCredentials: true });
+        const response = await axios.post(`http://16.176.121.1/api/Admin/AddNewResource`, resource, { withCredentials: true });
         console.log(response);
         if (response.status === 200) {  // Expecting 201 status code for created resource
           setResources((prevResources) => [...prevResources, response.data]);

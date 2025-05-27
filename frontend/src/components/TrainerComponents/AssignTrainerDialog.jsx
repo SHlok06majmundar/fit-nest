@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, Select, MenuItem } from "@mui/material";
 import { useAuthContext } from "../../context/AuthContext";
-import { SocketContext } from "../../context/SocketContext";
+import { useSocket } from "../../context/SocketContext";
 
 /**
  * AssignTrainerDialog is a React component that renders a dialog box for
@@ -33,7 +32,7 @@ const AssignTrainerDialog = ({ open, onClose, trainers, emails }) => {
   const [assignedTrainers, setAssignedTrainers] = useState([]);
   const [AdminActions, setAdminActions] = useState("");
   const [extraPayment, setExtraPayment] = useState(0);
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
   useEffect(() => {
     if (selectedTrainer) {
       fetchAssignedTrainers(selectedTrainer);
@@ -53,7 +52,7 @@ const AssignTrainerDialog = ({ open, onClose, trainers, emails }) => {
   const fetchAssignedTrainers = async (selectedTrainer) => {
     try {
       const response = await axios.get(
-        `http://13.211.182.131:5000/api/Trainer/GetAssignedTrainers/${selectedTrainer}`, { withCredentials: true }
+        `http://16.176.121.1/api/Trainer/GetAssignedTrainers/${selectedTrainer}`, { withCredentials: true }
       );
       setAssignedTrainers(response.data.trainers_assigned || []);
     } catch (error) {
@@ -81,7 +80,7 @@ const AssignTrainerDialog = ({ open, onClose, trainers, emails }) => {
    */
   const handleApprove = async (AdminActions, trainerId, memberId, name, email, contact, startDate, endDate, extra_payment) => {
     try {
-      const response = await axios.put(`http://13.211.182.131:5000/api/Trainer/approve-trainer/${trainerId}/${memberId}`, { AdminActions, name, email, contact, startDate, endDate, extra_payment }
+      const response = await axios.put(`http://16.176.121.1/api/Trainer/approve-trainer/${trainerId}/${memberId}`, { AdminActions, name, email, contact, startDate, endDate, extra_payment }
         , { withCredentials: true }
       );
       if (response.status === 200) {
@@ -109,7 +108,7 @@ const AssignTrainerDialog = ({ open, onClose, trainers, emails }) => {
   const removeTrainerRefund = async (memberId, trainerId, paymentId, amount, userName, userEmail, startDate, endDate) => {
     if (window.confirm('Are you sure you want to remove this assigment and refund the user ?')) {
       try {
-        const response = await axios.put(`http://13.211.182.131:5000/api/Trainer/remove-trainer-refund/${memberId}/${trainerId}`, {
+        const response = await axios.put(`http://16.176.121.1/api/Trainer/remove-trainer-refund/${memberId}/${trainerId}`, {
           paymentId, amount
           , userEmail: userEmail,
           userName: userName,
@@ -143,7 +142,7 @@ const AssignTrainerDialog = ({ open, onClose, trainers, emails }) => {
     if (window.confirm('Are you sure you want to remove this request from user ?')) {
       try {
         await axios.put(
-          `http://13.211.182.131:5000/api/Trainer/RemoveTrainer/${memberId}/${trainerId}`, {}, { withCredentials: true }
+          `http://16.176.121.1/api/Trainer/RemoveTrainer/${memberId}/${trainerId}`, {}, { withCredentials: true }
         );
         alert("Trainer removed successfully!");
         fetchAssignedTrainers(trainerId);
@@ -174,7 +173,7 @@ const AssignTrainerDialog = ({ open, onClose, trainers, emails }) => {
   const handleRequestToPay = async (AdminActions, trainerId, memberId, name, email, contact, startDate, endDate, extra_payment) => {
     if (!startDate || !endDate || !extra_payment) { return alert("Please fill all the fields") }
     try {
-      const response = await axios.put(`http://13.211.182.131:5000/api/Trainer/request-to-pay-for-user/${trainerId}/${memberId}`, { AdminActions, name, email, contact, startDate, endDate, extra_payment }
+      const response = await axios.put(`http://16.176.121.1/api/Trainer/request-to-pay-for-user/${trainerId}/${memberId}`, { AdminActions, name, email, contact, startDate, endDate, extra_payment }
         , { withCredentials: true }
       );
       if (response.status === 200) {

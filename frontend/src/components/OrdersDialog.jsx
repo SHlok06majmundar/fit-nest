@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemText, TextField, Typography, Fade } from '@mui/material';
 import axios from 'axios';
-import { SocketContext } from '../context/SocketContext';
+import { useSocket } from '../context/SocketContext';
 /**
  * The OrdersDialog component is a dialog that displays all the orders of a user.
  * It fetches all the orders of the user when the component mounts and displays them
@@ -17,7 +17,7 @@ const OrdersDialog = ({ open, onClose, userId }) => {
   const [orders, setOrders] = useState([]); // State to hold the orders
   const [editingOrderId, setEditingOrderId] = useState(null); // State to track the order being edited
   const [updatedAddress, setUpdatedAddress] = useState('');// State to hold the updated address
-  const { socket } = useContext(SocketContext); // Access the socket context
+  const { socket } = useSocket();
   //The function below Fetches all the Orders of all the users which the user can
   useEffect(() => {
     setEditingOrderId(null);
@@ -33,13 +33,13 @@ const OrdersDialog = ({ open, onClose, userId }) => {
    * @returns {Promise<Array>} A promise that resolves to an array of orders.
    */
   const fetchUserOrders = async (userId) => {
-    const response = await axios.post(`http://13.211.182.131:5000/api/Order/GetAllOrders/${userId}`, {}, { withCredentials: true });
+    const response = await axios.post(`http://16.176.121.1/api/Order/GetAllOrders/${userId}`, {}, { withCredentials: true });
     return response.data;
   };
   const handleCancelOrder = async (orderId) => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
       try {
-        const response = await axios.put(`http://13.211.182.131:5000/api/Order/CancelOrder/${orderId}`, {}, { withCredentials: true });
+        const response = await axios.put(`http://16.176.121.1/api/Order/CancelOrder/${orderId}`, {}, { withCredentials: true });
         if (response.data.message) {
           setOrders((prevOrders) =>
             prevOrders.filter((order) => order.orderId !== orderId)
@@ -64,7 +64,7 @@ const OrdersDialog = ({ open, onClose, userId }) => {
    */
   const handleAddressUpdate = async (orderId) => {
     try {
-      const response = await axios.put(`http://13.211.182.131:5000/api/Order/UpdateOrderAddress/${orderId}`, {
+      const response = await axios.put(`http://16.176.121.1/api/Order/UpdateOrderAddress/${orderId}`, {
         address: updatedAddress,
       }, { withCredentials: true });
       if (response.data.message) {

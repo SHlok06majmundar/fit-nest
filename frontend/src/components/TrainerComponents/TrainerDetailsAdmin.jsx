@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Table,
@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import TrainerShiftUpdate from "../TrainerComponents/TrainerShiftUpdate";
 import bin from '../../assets/bin.png'
-import { SocketContext } from "../../context/SocketContext";
+import { useSocket } from "../../context/SocketContext";
 import AssignTrainerDialog from "./AssignTrainerDialog";
 import AddTrainerDialog from "./AddTrainerDialog";
 /**
@@ -33,8 +33,7 @@ const TrainerDetailsAdmin = ({ emails }) => {
   const [editAssign, setEditAssign] = useState(null);
   const [openAssignDialog, setOpenAssignDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const handleClose = () => setOpenAssignDialog(false);
-  const { socket } = useContext(SocketContext);
+  const { socket } = useSocket();
   /**
    * Handles the search query by updating the component state with the new search query.
    * This triggers a re-render of the component with the new search query.
@@ -53,7 +52,7 @@ const TrainerDetailsAdmin = ({ emails }) => {
   const handleDeleteTrainer = async (trainerId) => {
     if (window.confirm('Are you sure you want to delete this trainer?')) {
       try {
-        const response = await axios.delete(`http://13.211.182.131:5000/api/Trainer/delete-trainer/${trainerId}`, { withCredentials: true });
+        const response = await axios.delete(`http://16.176.121.1/api/Trainer/delete-trainer/${trainerId}`, { withCredentials: true });
         if (response.status === 200) {
           setTrainers((prevTrainers) => prevTrainers.filter((trainer) => trainer._id !== trainerId));
         }
@@ -73,7 +72,7 @@ const TrainerDetailsAdmin = ({ emails }) => {
 
   const fetchTrainers = async () => {
     try {
-      const response = await axios.get("http://13.211.182.131:5000/api/Trainer/AllTrainers", { withCredentials: true });
+      const response = await axios.get("http://16.176.121.1/api/Trainer/AllTrainers", { withCredentials: true });
       setTrainers(response.data);
     } catch (error) {
       console.error("Error fetching trainers:", error);
@@ -93,7 +92,7 @@ const TrainerDetailsAdmin = ({ emails }) => {
   const handleUpdateShift = async (trainerId, newShift) => {
     if (window.confirm('Are you sure you want to remove this shift?')) {
       try {
-        const response = await axios.put(`http://13.211.182.131:5000/api/Trainer/remove-shift/${trainerId}`, { day: newShift.day, time: newShift.time }
+        const response = await axios.put(`http://16.176.121.1/api/Trainer/remove-shift/${trainerId}`, { day: newShift.day, time: newShift.time }
           , { withCredentials: true }
         );
         if (response.data.message === "Shift removed successfully") {
@@ -115,7 +114,7 @@ const TrainerDetailsAdmin = ({ emails }) => {
   // Handle salary update
   const handleUpdateSalary = async (trainerId, newSalary) => {
     try {
-      await axios.put(`http://13.211.182.131:5000/api/Trainer/update-salary/${trainerId}`, { salary: newSalary }, { withCredentials: true });
+      await axios.put(`http://16.176.121.1/api/Trainer/update-salary/${trainerId}`, { salary: newSalary }, { withCredentials: true });
       setTrainers((prevTrainers) =>
         prevTrainers.map((trainer) =>
           trainer._id === trainerId ? { ...trainer, salary: newSalary } : trainer
@@ -157,7 +156,7 @@ const TrainerDetailsAdmin = ({ emails }) => {
   // Handle availability toggle
   const handleToggleAvailability = async (trainerId, currentAvailability) => {
     try {
-      await axios.put(`http://13.211.182.131:5000/api/Trainer/update-availability/${trainerId}`, {
+      await axios.put(`http://16.176.121.1/api/Trainer/update-availability/${trainerId}`, {
         availability: !currentAvailability,
       }, { withCredentials: true });
       setTrainers((prevTrainers) =>
@@ -318,7 +317,7 @@ const TrainerDetailsAdmin = ({ emails }) => {
                       {trainer.availability ? "Available" : "Unavailable"}
                     </Button>
                   </div>
-                  <AssignTrainerDialog trainers={trainers} trainer={trainer} emails={emails} onClose={handleClose} open={openAssignDialog} />
+                  <AssignTrainerDialog trainers={trainers} trainer={trainer} emails={emails} onClose={() => setOpenAssignDialog(false)} open={openAssignDialog} />
                 </TableCell>
               </TableRow>
             ))}

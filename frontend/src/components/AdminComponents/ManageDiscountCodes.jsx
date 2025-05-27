@@ -16,7 +16,7 @@ const ManageDiscountCodes = () => {
   useEffect(() => {
     const fetchDiscountCodes = async () => {
       try {
-        const response = await axios.get('http://13.211.182.131:5000/api/Admin/get-discount-codes', { withCredentials: true }); // Update with your backend route
+        const response = await axios.get('http://16.176.121.1/api/Admin/get-discount-codes', { withCredentials: true }); // Update with your backend route
         setDiscountCodes(response.data || []);
       } catch (error) {
         console.error('Error fetching discount codes:', error);
@@ -74,7 +74,7 @@ const ManageDiscountCodes = () => {
 
   const saveDiscountCodes = async () => {
     try {
-      await axios.post('http://13.211.182.131:5000/api/Admin/discount-codes', { discountCodes }, { withCredentials: true });
+      await axios.post('http://16.176.121.1/api/Admin/discount-codes', { discountCodes }, { withCredentials: true });
       alert('Discount codes updated successfully!');
     } catch (error) {
       console.error('Error saving discount codes:', error);

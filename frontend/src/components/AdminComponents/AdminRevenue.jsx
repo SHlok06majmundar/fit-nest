@@ -169,7 +169,7 @@ const AdminRevenue = () => {
    */
   const FetchTotalSalesFromMembership = async (startDate, endDate) => {
     try {
-      const response = await axios.get(`http://13.211.182.131:5000/api/users/SalesFromMembership/${startDate}/${endDate}`, { withCredentials: true });
+      const response = await axios.get(`http://16.176.121.1/api/users/SalesFromMembership/${startDate}/${endDate}`, { withCredentials: true });
       setMembershipSales(response.data.totalSales);
     }
     catch (err) {

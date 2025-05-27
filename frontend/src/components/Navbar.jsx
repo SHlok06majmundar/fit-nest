@@ -13,6 +13,7 @@ import { IoMdPerson } from 'react-icons/io';
 import { useAuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import ProfileDropdown from './ProfileDropdown';
+import logo from '../assets/fitnest.png';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,7 +27,7 @@ const Navbar = () => {
   const getAllResources = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://13.211.182.131:5000/api/Admin/AllResources');
+      const response = await axios.get('http://16.176.121.1/api/Admin/AllResources');
       setResources(response.data);
     } catch (err) {
       console.error(err);
@@ -55,7 +56,7 @@ const Navbar = () => {
           <img
           style={{cursor:'pointer'}}
             onClick={() => navigate('/')}
-            src={resources.find((item) => item.title === 'HOME_LOGO')?.resourceLink}
+            src={logo}
             alt="FITNEST"
             className="h-10 mr-3"
           />

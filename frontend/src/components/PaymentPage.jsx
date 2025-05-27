@@ -112,7 +112,7 @@ const PaymentPage = () => {
   //   try {
   //     selectedProducts.forEach(async (product) => {
   //       const response = await axios.delete(
-  //         `http://13.211.182.131:5000/api/Cart/DeleteFromCartAfterOrder/${Authuser._id}/${product.productId}`
+  //         `http://16.176.121.1/api/Cart/DeleteFromCartAfterOrder/${Authuser._id}/${product.productId}`
   //         ,{withCredentials:true}
   //       );
   //       if (response.data.message === "Product deleted from cart successfully") {
