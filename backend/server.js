@@ -18,19 +18,28 @@ import rateLimit from "express-rate-limit";
 import { app, io, server } from "./socket/socket.js";
 import { scheduleEmailNotifications, UpdateMembershipStatus } from "./controllers/UserControllers.js";
 import helmet from "helmet";
-const PORT = process.env.PORT || 5000
+
+const PORT = process.env.PORT || 5000;
+
+// Error handling for uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+// Error handling for unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Rejection:', err);
+  process.exit(1);
+});
+
 scheduleEmailNotifications();
 UpdateMembershipStatus();
-const __dirname_temp=path.resolve();
+
+const __dirname_temp = path.resolve();
 const __dirname = path.join(__dirname_temp, '.');
 console.log(__dirname);
-// const limiter = rateLimit({
-//     windowMs: 1 * 60 * 1000, // 1 minutes window
-//     max: 100, // Allow 100 requests per window
-//     message: `Too many requests from this IP,
-//    please try again later`,
-// });
-// app.use(limiter);
+
 app.use(helmet());
 app.use(
   helmet.contentSecurityPolicy({
@@ -43,17 +52,16 @@ app.use(
     },
   })
 );
- 
 
-// Optionally configure Helmet for specific needs
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 app.use(cors({ 
-  origin: ["*", "http://13.211.182.131:3000", "http://16.176.121.1:3000"], 
+  origin: ["*", "http://13.211.182.131:3000", "http://16.176.121.1:3000", "http://localhost:3000"], 
   credentials: true 
 }));
-app.use(bodyParser.json());
-//middleware
+app.use(bodyParser.json({ limit: '50mb' }));
+
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', ProductRoutes);
@@ -62,13 +70,38 @@ app.use('/api/Cart', CartRoutes);
 app.use('/api/Order', OrderRoutes);
 app.use('/api/Trainer', TrainerRoutes);
 app.use('/api/Admin', AdminRoutes);
+
+// Serve static files in production
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(path.resolve(), "frontend/dist")));
+  const frontendPath = path.join(path.resolve(), "frontend/dist");
+  console.log('Serving frontend from:', frontendPath);
+  
+  app.use(express.static(frontendPath));
+  
   app.get('*', (req, res) => {
-    res.sendFile(path.join(path.resolve(), "frontend/dist", "index.html"));
+    const indexPath = path.join(frontendPath, 'index.html');
+    console.log('Serving index.html from:', indexPath);
+    res.sendFile(indexPath);
   });
 }
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`hello ${PORT}`);
-  connectDB();
-})
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// Start server with error handling
+const startServer = async () => {
+  try {
+    await connectDB();
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
