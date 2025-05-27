@@ -4,10 +4,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '16.176.121.1',
+    host: '0.0.0.0',  // This allows external access
     port: 3000
   },
   build: {
     sourcemap: false, // ✅ disables problematic source maps
+    outDir: 'dist',
+    assetsDir: 'assets'
   }
 })
