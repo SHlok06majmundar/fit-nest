@@ -49,7 +49,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ 
-  origin: ["http://13.211.182.131:3000"], 
+  origin: ["*","http://13.211.182.131:3000"], 
   credentials: true 
 }));
 app.use(bodyParser.json());
