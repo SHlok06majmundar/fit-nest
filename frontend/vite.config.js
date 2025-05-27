@@ -10,6 +10,19 @@ export default defineConfig({
   build: {
     sourcemap: false, // ✅ disables problematic source maps
     outDir: 'dist',
-    assetsDir: 'assets'
-  }
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+  },
+  publicDir: 'public',
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 })
